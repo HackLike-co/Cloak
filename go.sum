@@ -1,0 +1,4 @@
+github.com/HackLike-co/Gecko v0.0.0-20250318030926-fea827847dee h1:CM+sQPx9R3o6R6y8H8iyqamhk92Fft/qdZhvNAkScm4=
+github.com/HackLike-co/Gecko v0.0.0-20250318030926-fea827847dee/go.mod h1:bK6OHaZpR7XBF8oLG368IkYrn/BoW6fAP6YyDqel17E=
+github.com/akamensky/argparse v1.4.0 h1:YGzvsTqCvbEZhL8zZu2AiA5nq805NZh75JNj4ajn1xc=
+github.com/akamensky/argparse v1.4.0/go.mod h1:S5kwC7IuDcEr5VeXtGPRVZ5o/FdhcMlQz4IZQuw64xA=

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cloak | Generate "Secure" Stagers</title>
+        <link rel="icon" type="image/x-icon" href="images/cloak.ico">
+        <link rel="stylesheet" href="style/index.css">
+    </head>
+
+    <body>
+        
+        <div class="form-container">
+
+            <a href="https://github.com/HackLike-co/Cloak" target="_blank" rel="noopener noreferrer"><img src="images/cloak_logo.png" alt=""></a>
+            <form action="/api/f2j" method="post" enctype="multipart/form-data">
+
+                <fieldset class="payload-field">
+                    <legend> <img src="images/payload.png" class="payload-icon" height="28px"> Payload</legend>
+
+                    <div class="payload-info">
+
+                        <div class="file-upload">
+    
+                            <label for="payload-label" class="dont-be-a-button">Payload:</label>
+                            <label for="payload-upload" class="file-upload" id="payload-label">Upload Shellcode</label>
+                            <input type="file" id="payload-upload" name="payload-upload">
+                            <span hidden="true" id="uploaded-payload-label">File: </span>
+                            <span id="payload-name">No Payload Uploaded...</span>
+        
+                        </div>
+
+                        <div class="payload-encoding">
+
+                            <label for="encoding-dropdown">Payload Encoding/Encryption:</label>
+                            <select name="payload-encoding" id="encoding-dropdown">
+
+                                <option value="invalid">Select an Option</option>
+                                <option value="none">none</option>
+                                <!-- <option value="xor">xor</option> -->
+                                <option value="rc4">rc4</option>
+                                <option value="aes">aes</option>
+            
+                            </select>
+
+                        </div>
+
+                        <div class="output-select">
+        
+                            <label for="output-dropdown">Output Format:</label>
+                            <select name="output-format" id="output-dropdown">
+        
+                                <option value="invalid">Select an Output Format</option>
+                                <option value="exe">EXE</option>
+            
+                            </select>
+        
+                        </div>
+    
+                    </div>
+
+                    <fieldset class="exec-field">
+                        <legend> <img src="images/exec.png" class="payload-icon" height="28px"> Execution Options</legend>
+
+                        <div class="exec-method">
+                            
+                            <label for="method-dropdown" onchange="showInject()">Payload Exection Method:</label>
+                            <select name="exec-method" id="method-dropdown">
+
+                                <option value="invalid">Select an Exection Method</option>
+                                <option value="inject">Inject</option>
+                                <option value="fibers">Fibers</option>
+                                <option value="threadpool">CreateThreadPoolWait</option>
+            
+                            </select>
+
+                        </div>
+
+                        <div class="inject-method" id="inject-method-div">
+
+                            <label for="inject-dropdown">Select an Injection Method:</label>
+                            <select name="inject-method" id="inject-dropdown">
+
+                                <option value="invalid">Select an Injection Method</option>
+                                <option value="local-thread">Local Thread</option>
+                                <!-- <option value="remote-thread">Remote Thread</option> -->
+                                <option value="local-hijack">Local Thread Hijack</option>
+                                <!-- <option value="remote-hijack">Remote Thread Hijack</option> -->
+                                <option value="apc">APC Inject</option>
+                                <!-- <option value="earlybird">Early Bird APC</option> -->
+                                <!-- <option value="earlycascade">Early Cascade</option> -->
+
+                            </select>
+
+                        </div>
+
+                        <div class="exec-delay">
+                            
+                            <label for="exec-delay-input">Execution Delay (seconds):</label>
+                            <br>
+                            <input type="text" id="exec-delay-input" class="text-input" name="exec-delay">
+                        
+                        </div>
+
+                    </fieldset>
+
+                    <br>
+
+                    <fieldset class="guardrails-field">
+                        <legend> <img src="images/guardrail.png" class="guardrails-icon" height="28px"> Guardrails</legend>
+
+                        <div class="guard-checks">
+
+                            <input type="checkbox" id="check-hostname" name="check-hostname" value="true">
+                            <label for="check-hostname">Check Hostname</label>
+    
+                            <!-- <input type="checkbox" name="check-domain" id="check-domain" value="true">
+                            <label for="check-domain">Check Domain Name</label> -->
+
+                            <!-- <input type="checkbox" name="check-domain-joined" id="check-domain-joined" value="true">
+                            <label for="check-domain-joined">Check Domain Joined</label> -->
+
+                            <!-- <br> -->
+                            <!-- <br> -->
+
+                            <!-- <input type="checkbox" name="check-subnet" id="check-subnet" value="true">
+                            <label for="check-subnet">Check Subnet</label> -->
+
+                        </div>
+
+                        <br>
+
+                        <div class="guard-inputs">
+
+                            <label for="hostname-input" class="hostname-input">Hostname:</label>
+                            <input type="text" name="hostname-to-check" id="hostname-input" class="hostname-input">
+
+                            <!-- <label for="domainname-input" class="domainname-input">Domain:</label>
+                            <input type="text" name="domain-name-to-check" id="domainname-input" class="domainname-input"> -->
+
+                            <!-- <label for="subnet-input" class="subnet-input">Subnet:</label>
+                            <input type="text" name="subnet-to-check" id="subnet-input" class="subnet-input"> -->
+
+                        </div>
+                        
+                    </fieldset>
+
+                </fieldset>
+                
+                <input type="submit" name="submit-payload" id="submit-payload" class="submit-payload" value="Generate Payload">
+
+            </form>
+
+        </div>
+
+        <script>
+            let uploadPayloadBtn = document.getElementById("payload-upload");
+            uploadPayloadBtn.addEventListener("change", updatePayloadText);
+    
+            function updatePayloadText() {
+                if (this.files && this.files[0]) {
+                    document.getElementById("uploaded-payload-label").hidden = false;
+                    document.getElementById("payload-name").innerHTML = this.files[0].name;
+                }
+            }
+    
+            let methodDropdown = document.getElementById("method-dropdown");
+            let injectDiv = document.getElementById("inject-method-div");
+    
+            methodDropdown.addEventListener("change", function(event) {
+                if (event.target.value === "inject") {
+                    injectDiv.style.display = "block";
+                } else {
+                    injectDiv.style.display = "none";
+                }
+            });
+
+            let hostCheck = document.getElementById("check-hostname");
+            //let domainNameCheck = document.getElementById("check-domain");
+            // let subnetCheck = document.getElementById("check-subnet");
+            //let domainCheck = document.getElementById("check-domain-joined")
+
+            let hostClass = document.getElementsByClassName("hostname-input");
+            //let domainClass = document.getElementsByClassName("domainname-input");
+            // let subnetClass = document.getElementsByClassName("subnet-input");
+
+            hostCheck.addEventListener("change", function(event) {
+                if (event.target.checked === true) {
+                    for (i = 0; i < hostClass.length; i++) {
+                        hostClass[i].style.display = "block";
+                    }
+                } else {
+                    for (i = 0; i < hostClass.length; i++) {
+                        hostClass[i].style.display = "none";
+                    }
+                }
+            });
+
+            /*
+
+            domainNameCheck.addEventListener("change", function(event) {
+                if (event.target.checked === true) {
+                    for (i = 0; i < domainClass.length; i++) {
+                        domainClass[i].style.display = "block";
+                    }
+
+                    if (domainCheck.checked === false) {
+                        domainCheck.checked = true;
+                    }
+                } else {
+                    for (i = 0; i < domainClass.length; i++) {
+                        domainClass[i].style.display = "none";
+                    }
+                }
+            });
+
+            */
+
+            /*
+
+            subnetCheck.addEventListener("change", function(event) {
+                if (event.target.checked === true) {
+                    for (i = 0; i < subnetClass.length; i++) {
+                        subnetClass[i].style.display = "block";
+                    }
+                } else {
+                    for (i = 0; i < subnetClass.length; i++) {
+                        subnetClass[i].style.display = "none";
+                    }
+                }
+            });
+
+            */
+
+        </script>
+
+    </body>
+
+</html>

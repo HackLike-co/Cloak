@@ -1,0 +1,244 @@
+* {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    border-radius: 8px;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: linear-gradient(to bottom right, #0c0c0c, #2b2a2a);
+}
+
+input[type="file"] {
+    display: none;
+}
+
+input[type="text"] {
+    width: 100%;
+    background-color: #636363;
+    border: none;
+    color: #ffffff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+.payload-field {
+    border: 2px solid #ffffff;
+    color: #ffffff;
+}
+
+.payload-field legend {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.payload-icon {
+    float: left;
+    padding-right: 5px;
+}
+
+.payload-title img {
+    float: left;
+    vertical-align: middle;
+}
+
+.form-container {
+    background-color: #2C2C2C;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
+}
+
+.form-container h4 {
+    text-align: center;
+    color: #ffffff;
+}
+
+.form-container img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.file-upload {
+    display: inline-block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #ffffff;
+    width: 100%;
+}
+
+.file-upload label {
+    margin-bottom: 10px;
+}
+
+#payload-label {
+    border: 2px solid #ffffff;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#payload-label:hover {
+    background-color: #636363;
+}
+
+.file-upload span {
+    font-size: 14px;
+}
+
+.payload-encoding {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.payload-encoding select {
+    appearance: none;
+    width: 100%;
+    background-color: #2C2C2C;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.payload-encoding select:hover {
+    background-color: #636363;
+}
+
+.output-select {
+    margin-top: 15px;
+}
+
+.output-select select {
+    appearance: none;
+    width: 100%;
+    background-color: #2C2C2C;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.output-select select:hover {
+    background-color: #636363;
+}
+
+.output-select label {
+    color: #ffffff;
+    font-weight: normal;
+}
+
+.exec-method {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.exec-method select {
+    appearance: none;
+    width: 100%;
+    background-color: #2C2C2C;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.exec-method select:hover {
+    background-color: #636363;
+}
+
+.inject-method {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: none;
+}
+
+.inject-method select {
+    appearance: none;
+    width: 100%;
+    background-color: #2C2C2C;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.exec-delay {
+    width: auto;
+    margin-right: 10px;
+}
+
+.guardrails-field legend {
+    font-weight: bold;
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.guardrails-field img {
+    float: left;
+    padding-right: 5px;
+}
+
+.guard-checks label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 25px;
+}
+
+.guard-inputs {
+    width: auto;
+    margin-right: 10px;
+}
+
+.hostname-input {
+    display: none;
+}
+
+.domainname-input {
+    display: none;
+}
+
+.subnet-input {
+    display: none;
+}
+
+.submit-payload {
+    width: 100%;
+    background-color: #2C2C2C;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 15px;
+}
+
+.submit-payload:hover {
+    background-color: #636363;
+}
