@@ -1,6 +1,14 @@
 # Cloak
 Generate "Secure" (ha) Stagers through a convienent Web UI. Will this evade EDRs? no. I'm not trying to burn my TTPs lmao.
 
+## Quick Start
+```
+git clone https://github.com/HackLike-co/Cloak.git
+cd Cloak
+go build .
+./cloak.exe
+```
+
 ## Features
 ### Input Formats
 - [X] Shellcode
