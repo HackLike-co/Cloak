@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="https://github.com/HackLike-co/Cloak/blob/main/images/cloak_logo.png?raw=true">
+</p>
+
 # Cloak
 Generate "Secure" (ha) Stagers through a convienent Web UI. Will this evade EDRs? no. I'm not trying to burn my TTPs lmao.
 
@@ -8,6 +12,10 @@ cd Cloak
 go build .
 ./cloak.exe
 ```
+
+<p align="center">
+    <img src="https://github.com/HackLike-co/Cloak/blob/main/images/cloak_ui.png?raw=true">
+</p>
 
 ## Features
 ### Input Formats
