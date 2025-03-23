@@ -200,23 +200,6 @@ input[type="text"] {
     margin-right: 10px;
 }
 
-.evasion-field legend {
-    font-weight: bold;
-    font-size: 24px;
-    color: #ffffff;
-}
-
-.evade-icon {
-    float: left;
-    padding-right: 5px;
-}
-
-.evasion-field label {
-    font-size: 16px;
-    font-weight: bold;
-    margin-right: 25px;
-}
-
 .guardrails-field legend {
     font-weight: bold;
     font-size: 24px;

