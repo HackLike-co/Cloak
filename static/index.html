@@ -81,14 +81,22 @@
 
                                 <option value="invalid">Select an Injection Method</option>
                                 <option value="local-thread">Local Thread</option>
-                                <!-- <option value="remote-thread">Remote Thread</option> -->
+                                <option value="remote-thread">Remote Thread</option>
                                 <option value="local-hijack">Local Thread Hijack</option>
-                                <!-- <option value="remote-hijack">Remote Thread Hijack</option> -->
+                                <option value="remote-hijack">Remote Thread Hijack</option>
                                 <option value="apc">APC Inject</option>
-                                <!-- <option value="earlybird">Early Bird APC</option> -->
+                                <option value="earlybird">Early Bird APC</option>
                                 <!-- <option value="earlycascade">Early Cascade</option> -->
 
                             </select>
+
+                        </div>
+
+                        <div class="remote-proc" id="remote-proc-div">
+
+                            <label for="remote-process-input" class="remote-process-input">Target Process:</label>
+                            <br>
+                            <input type="text" name="remote-process" id="remote-process-input" class="remote-process-input">
 
                         </div>
 
@@ -152,6 +160,7 @@
         </div>
 
         <script>
+            // fancy upload button
             let uploadPayloadBtn = document.getElementById("payload-upload");
             uploadPayloadBtn.addEventListener("change", updatePayloadText);
     
@@ -162,14 +171,29 @@
                 }
             }
     
+            // show inject dropdown if needed
             let methodDropdown = document.getElementById("method-dropdown");
             let injectDiv = document.getElementById("inject-method-div");
+            let remoteDiv = document.getElementById("remote-proc-div");
     
             methodDropdown.addEventListener("change", function(event) {
                 if (event.target.value === "inject") {
                     injectDiv.style.display = "block";
+                    remoteDiv.style.display = "none";
                 } else {
                     injectDiv.style.display = "none";
+                    remoteDiv.style.display = "none";
+                }
+            });
+
+            // show remote process info if needed
+            let injectDropdown = document.getElementById("inject-dropdown");
+
+            injectDropdown.addEventListener("change", function(event) {
+                if (event.target.value === "remote-thread" || event.target.value === "remote-hijack") {
+                    remoteDiv.style.display = "block";
+                } else {
+                    remoteDiv.style.display = "none";
                 }
             });
 

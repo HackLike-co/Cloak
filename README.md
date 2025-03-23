@@ -64,5 +64,6 @@ Most of these can be sumarized as I didn't want to add it the the frontend becau
 This project was inspired by the amazing EvadeX from [PhantomSec](https://phantomsec.tools) and OST from [Outflank](https://www.outflank.nl/products/outflank-security-tooling/). If you and your team has the funds, I highly recommend them. This is just a shitty knock off because it seemed like a fun project.
 
 - [tiny-AES-c](https://github.com/kokke/tiny-AES-c)
+- [Rad98 Hooking Engine From VX-API](https://github.com/vxunderground/VX-API#rad98-hooking-engine)
 
 If you want to learn more, I recommend [ired.team](https://ired.team) and/or [Maldev Academy](https://maldevacademy.com)
