@@ -7,7 +7,10 @@
 #include <stdio.h>
 
 #include "Config.hpp"
+
+#ifdef AES
 #include "aes.h"
+#endif // !AES
 
 #ifdef BYPASS_AMSI
 #include "HardwareBreakPoints.h"
