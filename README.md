@@ -3,7 +3,7 @@
 </p>
 
 # Cloak
-Generate "Secure" (ha) Stagers through a convienent Web UI. Will this evade EDRs? no. I'm not trying to burn my TTPs lmao.
+Generate Payloads
 
 ## Quick Start
 ```
