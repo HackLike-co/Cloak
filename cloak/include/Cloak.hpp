@@ -3,10 +3,10 @@
 #ifndef CLOAK_H
 #define CLOAK_H
 
+#include "Config.hpp"
+
 #include <windows.h>
 #include <stdio.h>
-
-#include "Config.hpp"
 
 #ifdef AES
 #include "aes.h"
@@ -35,6 +35,10 @@ BOOL LocalThreadInject(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize);
 BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize);
 VOID GottaCatchEmAll(); // useless function
 #endif // !LOCAL_THREAD_HIJACK
+
+#ifdef LOCAL_THREAD_HIJACK_ENUM
+BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize);
+#endif //! LOCAL_THREAD_HIJACK_ENUM
 
 #ifdef APC
 VOID WaitForSingleObjectExAlertable();

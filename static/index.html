@@ -54,8 +54,13 @@
                             </select>
         
                         </div>
+
+                        <input type="checkbox" id="debug-box" name="debug" value="true">
+                        <label for="debug-box">Debug</label>
     
                     </div>
+
+                    <br>
 
                     <fieldset class="exec-field">
                         <legend> <img src="images/exec.png" class="payload-icon" height="28px"> Execution Options</legend>
@@ -82,8 +87,9 @@
                                 <option value="invalid">Select an Injection Method</option>
                                 <option value="local-thread">Local Thread</option>
                                 <option value="remote-thread">Remote Thread</option>
-                                <option value="local-hijack">Local Thread Hijack</option>
-                                <option value="remote-hijack">Remote Thread Hijack</option>
+                                <option value="local-hijack">Local Thread Hijack (CreateThread)</option>
+                                <option value="local-hijack-enum">Local Thread Hijack (EnumThread)</option>
+                                <!-- <option value="remote-hijack">Remote Thread Hijack</option> -->
                                 <option value="apc">APC Inject</option>
                                 <option value="earlybird">Early Bird APC</option>
                                 <!-- <option value="earlycascade">Early Cascade</option> -->

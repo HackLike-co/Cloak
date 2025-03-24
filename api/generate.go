@@ -91,6 +91,10 @@ func generate(g transport.Generate) ([]byte, error) {
 
 	configOutput += fmt.Sprintf("#define DELAY %d\n\n", g.ExecDelay)
 
+	if g.Debug {
+		configOutput += "#define DEBUG\n\n"
+	}
+
 	if g.CheckHostname {
 		configOutput += fmt.Sprintf("#define CHECK_HOSTNAME\n\n#ifdef CHECK_HOSTNAME\n#define HOSTNAME \"%s\"\nBOOL CheckHostname(IN LPSTR pwGuardHost);\n#endif\n\n", g.Hostname)
 	}
@@ -102,6 +106,8 @@ func generate(g transport.Generate) ([]byte, error) {
 			configOutput += "#define LOCAL_THREAD\n\n"
 		case "local-hijack":
 			configOutput += "#define LOCAL_THREAD_HIJACK\n\n"
+		case "local-hijack-enum":
+			configOutput += "#define LOCAL_THREAD_HIJACK_ENUM\n\n"
 		case "apc":
 			configOutput += "#define APC\n\n"
 		default:

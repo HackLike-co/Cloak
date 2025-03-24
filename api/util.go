@@ -28,6 +28,7 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 	var (
 		execDelay     int  = 0
 		checkHostname bool = false
+		debug         bool = false
 		// checkDomainName   bool = false
 		// checkDomainJoined bool = false
 		// checkSubnet       bool = false
@@ -95,6 +96,10 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		checkHostname = true
 	}
 
+	if r.FormValue("debug") == "true" {
+		debug = true
+	}
+
 	// check for domain name if box checked
 	// if r.FormValue("check-domain") == "true" && r.FormValue("domain-name-to-check") == "" {
 	// 	w.WriteHeader(http.StatusBadRequest)
@@ -150,6 +155,7 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		ExecDelay:       execDelay,
 		CheckHostname:   checkHostname,
 		Hostname:        r.FormValue("hostname-to-check"),
+		Debug:           debug,
 	}
 
 	// send generate request

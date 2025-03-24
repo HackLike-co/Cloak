@@ -5,7 +5,9 @@
 
 #define DELAY 0
 
-#define FIBERS
+#define DEBUG
+
+#define LOCAL_THREAD_HIJACK_ENUM
 
 #define WAIT_TIME INFINITE
 

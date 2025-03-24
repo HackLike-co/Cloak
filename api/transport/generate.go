@@ -10,4 +10,5 @@ type Generate struct {
 	ExecDelay       int    `json:"delay"`
 	CheckHostname   bool   `json:"checkHost"`
 	Hostname        string `json:"hostname"`
+	Debug           bool   `json:"debug"`
 }
