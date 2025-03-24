@@ -27,13 +27,28 @@ go build .
 - [X] EXE
 - [ ] DLL
 
+### Execution Options
+- [X] Fibers
+- [X] CreateThreadPoolWait
+- [X] Injection
+    - [X] Local Thread
+    - [ ] Remote Thread
+    - [X] Local Thread Hijack (CreateThread)
+    - [X] Local Thread Hijack (EnumThread)
+    - [ ] Remote Thread Hijack
+    - [X] APC
+    - [ ] EarlyBird APC
+    - [ ] EarlyCascade
+
 ### Evasion
 - [ ] AMSI Patching
 - [ ] ETW Patching
 - [ ] API Hashing
 - [X] Payload Encryption/Encoding
+- [ ] IAT Camouflage
 - [ ] Anti-Debug
 - [ ] Anti-VM
+    - [X] Execution Delay
 - [ ] DLL Unhooking
 - [ ] Modify Creation Date/Time
 
