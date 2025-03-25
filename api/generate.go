@@ -136,7 +136,13 @@ func generate(g transport.Generate) ([]byte, error) {
 	}
 	defer rFile.Close()
 
-	resrcOutput := "1 VERSIONINFO\n"
+	var resrcOutput string
+
+	if g.Icon != "none" {
+		resrcOutput += fmt.Sprintf("ID ICON icons/%s.ico\n", g.Icon)
+	}
+
+	resrcOutput += "1 VERSIONINFO\n"
 	resrcOutput += fmt.Sprintf("FILEVERSION %s\nBEGIN\n\tBLOCK \"StringFileInfo\"\n\tBEGIN\n\t\tBLOCK\"040904E4\"\n\t\tBEGIN\n", g.FileVersion)
 	resrcOutput += fmt.Sprintf("\t\t\tVALUE \"CompanyName\", \"%s\"\n", g.CompanyName)
 	resrcOutput += fmt.Sprintf("\t\t\tVALUE \"FileDescription\", \"%s\"\n", g.FileDescription)

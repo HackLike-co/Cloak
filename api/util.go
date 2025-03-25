@@ -5,8 +5,13 @@ import (
 	"cloak/api/transport"
 	"io"
 	"net/http"
+	"slices"
 	"strconv"
 	"strings"
+)
+
+var (
+	validIcons []string = []string{"slack", "chrome", "firefox", "edge", "outlook", "none"}
 )
 
 func FormToJson(w http.ResponseWriter, r *http.Request) {
@@ -102,6 +107,13 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		debug = true
 	}
 
+	if !slices.Contains(validIcons, r.FormValue("icon")) {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Invalid icon"))
+
+		return
+	}
+
 	// check for domain name if box checked
 	// if r.FormValue("check-domain") == "true" && r.FormValue("domain-name-to-check") == "" {
 	// 	w.WriteHeader(http.StatusBadRequest)
@@ -172,6 +184,7 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		InternalName:     r.FormValue("internal-name"),
 		OriginalFilename: r.FormValue("og-filename"),
 		Copyright:        r.FormValue("copyright"),
+		Icon:             r.FormValue("icon"),
 	}
 
 	// send generate request

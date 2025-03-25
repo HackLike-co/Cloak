@@ -19,4 +19,5 @@ type Generate struct {
 	OriginalFilename string `json:"originalFilename"`
 	InternalName     string `json:"internalName"`
 	Copyright        string `json:"copyright"`
+	Icon             string `json:"icon"`
 }
