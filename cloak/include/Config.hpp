@@ -3,11 +3,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define DELAY 0
-
-#define DEBUG
-
-#define LOCAL_THREAD_HIJACK_ENUM
+#define FIBERS
 
 #define WAIT_TIME INFINITE
 

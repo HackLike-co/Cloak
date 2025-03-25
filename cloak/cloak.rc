@@ -1,0 +1,21 @@
+1 VERSIONINFO
+FILEVERSION 112,2,4,2
+BEGIN
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK"040904E4"
+		BEGIN
+			VALUE "CompanyName", "HackLike.co LLC"
+			VALUE "FileDescription", "Hack Like No Other"
+			VALUE "InternalName", "Cloak"
+			VALUE "OriginalFilename", "cloak.exe"
+			VALUE "LegalCopyright", "HackLike.co LLC Copyright 2025"
+			VALUE "ProductName", "Cloak"
+			VALUE "ProductVersion", "1.0"
+		END
+	END
+	BLOCK"VarFileInfo"
+	BEGIN
+		VALUE "Translation", 0x409, 1252
+	END
+END

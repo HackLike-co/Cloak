@@ -42,21 +42,6 @@
                             </select>
 
                         </div>
-
-                        <div class="output-select">
-        
-                            <label for="output-dropdown">Output Format:</label>
-                            <select name="output-format" id="output-dropdown">
-        
-                                <option value="invalid">Select an Output Format</option>
-                                <option value="exe">EXE</option>
-            
-                            </select>
-        
-                        </div>
-
-                        <input type="checkbox" id="debug-box" name="debug" value="true">
-                        <label for="debug-box">Debug</label>
     
                     </div>
 
@@ -156,6 +141,72 @@
                         </div>
                         
                     </fieldset>
+
+                </fieldset>
+
+                <br>
+
+                <fieldset class="output-field">
+                    <legend> <img src="images/output.png" class="output-icon" height="28px"> Output Options</legend>
+
+                    <div class="output-select">
+        
+                        <label for="output-dropdown">Output Format:</label>
+                        <select name="output-format" id="output-dropdown">
+    
+                            <option value="invalid">Select an Output Format</option>
+                            <option value="exe">EXE</option>
+        
+                        </select>
+    
+                    </div>
+
+                    <div class="metadata-check">
+
+                        <input type="checkbox" id="md-box" name="metadata" value="true">
+                        <label for="md-box">Edit Metadata</label>
+
+                    </div> 
+
+                    <fieldset class="metadata-field" id="metadata-field">
+                        <legend> <img src="images/metadata.png" class="output-icon" height="28px"> Metadata</legend>
+
+                        <div class="metadata-div">
+
+                            <label for="company-name" class="metadata-input">Company:</label>
+                            <input type="text" name="company-name" id="company-name" class="metadata-input">
+
+                            <label for="file-version" class="metadata-input">File Version:</label>
+                            <input type="text" name="file-version" id="file-version" class="metadata-input">
+
+                            <label for="file-desc" class="metadata-input">File Description:</label>
+                            <input type="text" name="file-desc" id="file-desc" class="metadata-input">
+
+                            <label for="product-name" class="metadata-input">Product Name:</label>
+                            <input type="text" name="product-name" id="product-name" class="metadata-input">
+
+                            <label for="product-version" class="metadata-input">Product Version:</label>
+                            <input type="text" name="product-version" id="product-version" class="metadata-input">
+
+                            <label for="og-filename" class="metadata-input">Original Filename:</label>
+                            <input type="text" name="og-filename" id="og-filename" class="metadata-input">
+
+                            <label for="internal-name" class="metadata-input">Internal Name:</label>
+                            <input type="text" name="internal-name" id="internal-name" class="metadata-input">
+
+                            <label for="copyright" class="metadata-input">Legal Copyright:</label>
+                            <input type="text" name="copyright" id="copyright" class="metadata-input">
+
+                        </div>
+
+                    </fieldset>
+
+                    <br>
+
+                    <div class="debug">
+                        <input type="checkbox" id="debug-box" name="debug" value="true">
+                        <label for="debug-box">Debug</label>
+                    </div>
 
                 </fieldset>
                 
@@ -259,6 +310,17 @@
             });
 
             */
+
+            let metaCheck = document.getElementById("md-box");
+            let metaField = document.getElementById("metadata-field");
+
+            metaCheck.addEventListener("change", function(event) {
+                if (event.target.checked === true) {
+                    metaField.style.display = "block"
+                } else {
+                    metaField.style.display = "none"
+                }
+            });
 
         </script>
 

@@ -129,6 +129,27 @@ func generate(g transport.Generate) ([]byte, error) {
 	// write to config file
 	configFile.WriteString(configOutput)
 
+	// open resource file
+	rFile, err := os.OpenFile("./cloak/cloak.rc", os.O_RDWR|os.O_TRUNC, 0755)
+	if err != nil {
+		return nil, err
+	}
+	defer rFile.Close()
+
+	resrcOutput := "1 VERSIONINFO\n"
+	resrcOutput += fmt.Sprintf("FILEVERSION %s\nBEGIN\n\tBLOCK \"StringFileInfo\"\n\tBEGIN\n\t\tBLOCK\"040904E4\"\n\t\tBEGIN\n", g.FileVersion)
+	resrcOutput += fmt.Sprintf("\t\t\tVALUE \"CompanyName\", \"%s\"\n", g.CompanyName)
+	resrcOutput += fmt.Sprintf("\t\t\tVALUE \"FileDescription\", \"%s\"\n", g.FileDescription)
+	resrcOutput += fmt.Sprintf("\t\t\tVALUE \"InternalName\", \"%s\"\n", g.InternalName)
+	resrcOutput += fmt.Sprintf("\t\t\tVALUE \"OriginalFilename\", \"%s\"\n", g.OriginalFilename)
+	resrcOutput += fmt.Sprintf("\t\t\tVALUE \"LegalCopyright\", \"%s\"\n", g.Copyright)
+	resrcOutput += fmt.Sprintf("\t\t\tVALUE \"ProductName\", \"%s\"\n", g.ProductName)
+	resrcOutput += fmt.Sprintf("\t\t\tVALUE \"ProductVersion\", \"%s\"\n", g.ProductVersion)
+	resrcOutput += "\t\tEND\n\tEND\n\tBLOCK\"VarFileInfo\"\n\tBEGIN\n\t\tVALUE \"Translation\", 0x409, 1252\n\tEND\nEND"
+
+	// write to resource file
+	rFile.WriteString(resrcOutput)
+
 	// run make
 	cmd := "make -C ./cloak/"
 	cmdNoReturn(cmd)

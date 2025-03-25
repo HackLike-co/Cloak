@@ -44,6 +44,7 @@ go build .
 - [X] Payload Encryption/Encoding
 - [ ] AMSI Patching
 - [ ] ETW Patching
+- [ ] DLL Unhooking
 - [ ] IAT Camouflage
 - [ ] API Hashing
 - [ ] Anti-Debug
@@ -53,7 +54,8 @@ go build .
     - [ ] VM Detection
     - [X] Execution Delay
     - [ ] API Hammering
-- [ ] DLL Unhooking
+- [ ] File Bloating
+- [ ] Custom Binary Metadata
 - [ ] Modify Creation Date/Time
 
 ### Guardrails

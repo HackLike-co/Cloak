@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func FormToJson(w http.ResponseWriter, r *http.Request) {
@@ -26,9 +27,10 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var (
-		execDelay     int  = 0
-		checkHostname bool = false
-		debug         bool = false
+		execDelay     int    = 0
+		checkHostname bool   = false
+		debug         bool   = false
+		fVersion      string = "1.0.0.0"
 		// checkDomainName   bool = false
 		// checkDomainJoined bool = false
 		// checkSubnet       bool = false
@@ -128,6 +130,12 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 	// 	checkSubnet = true
 	// }
 
+	// check fileversion has value
+	if r.FormValue("file-version") == "" {
+		fVersion = "1,0,0,0"
+	} else {
+		fVersion = strings.Replace(r.FormValue("file-version"), ".", ",", -1)
+	}
 	/*
 		End Error Checking
 	*/
@@ -147,15 +155,23 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 
 	// convert to json struct
 	var generateJson transport.Generate = transport.Generate{
-		Payload:         buf.Bytes(),
-		EncryptionAlgo:  r.FormValue("payload-encoding"),
-		OutputFormat:    r.FormValue("output-format"),
-		ExecutionMethod: r.FormValue("exec-method"),
-		InjectMethod:    r.FormValue("inject-method"),
-		ExecDelay:       execDelay,
-		CheckHostname:   checkHostname,
-		Hostname:        r.FormValue("hostname-to-check"),
-		Debug:           debug,
+		Payload:          buf.Bytes(),
+		EncryptionAlgo:   r.FormValue("payload-encoding"),
+		OutputFormat:     r.FormValue("output-format"),
+		ExecutionMethod:  r.FormValue("exec-method"),
+		InjectMethod:     r.FormValue("inject-method"),
+		ExecDelay:        execDelay,
+		CheckHostname:    checkHostname,
+		Hostname:         r.FormValue("hostname-to-check"),
+		Debug:            debug,
+		FileVersion:      fVersion,
+		CompanyName:      r.FormValue("company-name"),
+		FileDescription:  r.FormValue("file-desc"),
+		ProductName:      r.FormValue("product-name"),
+		ProductVersion:   r.FormValue("product-version"),
+		InternalName:     r.FormValue("internal-name"),
+		OriginalFilename: r.FormValue("og-filename"),
+		Copyright:        r.FormValue("copyright"),
 	}
 
 	// send generate request
