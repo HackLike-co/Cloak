@@ -56,7 +56,7 @@ go build .
     - [ ] API Hammering
 - [ ] File Bloating
 - [X] Custom Binary Metadata
-- [ ] Custom Binary Icon
+- [X] Custom Binary Icon
 - [ ] Modify Creation Date/Time
 
 ### Guardrails
