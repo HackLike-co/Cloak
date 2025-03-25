@@ -41,14 +41,18 @@ go build .
     - [ ] EarlyCascade
 
 ### Evasion
+- [X] Payload Encryption/Encoding
 - [ ] AMSI Patching
 - [ ] ETW Patching
-- [ ] API Hashing
-- [X] Payload Encryption/Encoding
 - [ ] IAT Camouflage
+- [ ] API Hashing
 - [ ] Anti-Debug
+    - [ ] Debugger Detection
+    - [ ] Self-Delete
 - [ ] Anti-VM
+    - [ ] VM Detection
     - [X] Execution Delay
+    - [ ] API Hammering
 - [ ] DLL Unhooking
 - [ ] Modify Creation Date/Time
 

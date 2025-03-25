@@ -89,7 +89,10 @@ func generate(g transport.Generate) ([]byte, error) {
 		configOutput += "#define RC4\n\n"
 	}
 
-	configOutput += fmt.Sprintf("#define DELAY %d\n\n", g.ExecDelay)
+	if g.ExecDelay > 0 {
+		configOutput += fmt.Sprintf("#define DELAY %d\n\n", g.ExecDelay)
+
+	}
 
 	if g.Debug {
 		configOutput += "#define DEBUG\n\n"
