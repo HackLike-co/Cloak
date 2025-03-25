@@ -157,11 +157,11 @@ func generate(g transport.Generate) ([]byte, error) {
 	rFile.WriteString(resrcOutput)
 
 	// run make
-	cmd := "make -C ./cloak/"
+	cmd := fmt.Sprintf("make -C ./cloak/ NAME=%s", g.OutputName)
 	cmdNoReturn(cmd)
 
 	// read generated file
-	fPayload, err := os.ReadFile("./cloak/bin/cloak.exe")
+	fPayload, err := os.ReadFile(fmt.Sprintf("./cloak/bin/%s.exe", g.OutputName))
 	if err != nil {
 		return nil, err
 	}

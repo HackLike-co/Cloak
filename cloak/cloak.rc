@@ -1,18 +1,18 @@
-ICON01 ICON icons/edge.ico
+ID ICON icons/chrome.ico
 1 VERSIONINFO
-FILEVERSION 115,64,24,3
+FILEVERSION 115,54,58,1
 BEGIN
 	BLOCK "StringFileInfo"
 	BEGIN
 		BLOCK"040904E4"
 		BEGIN
-			VALUE "CompanyName", "Slack"
-			VALUE "FileDescription", "Slack"
-			VALUE "InternalName", "Slack"
-			VALUE "OriginalFilename", "Slack.exe"
-			VALUE "LegalCopyright", "Slack Copyright 2025"
-			VALUE "ProductName", "Slack"
-			VALUE "ProductVersion", "12.0"
+			VALUE "CompanyName", "Google"
+			VALUE "FileDescription", "Web Browser"
+			VALUE "InternalName", "Chrome"
+			VALUE "OriginalFilename", "chrome.exe"
+			VALUE "LegalCopyright", "Google Chrome Copyright 2023"
+			VALUE "ProductName", "Google Chrome"
+			VALUE "ProductVersion", "16.4"
 		END
 	END
 	BLOCK"VarFileInfo"

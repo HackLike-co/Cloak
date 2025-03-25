@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"cloak/api/transport"
+	"fmt"
 	"io"
 	"net/http"
 	"slices"
@@ -170,6 +171,7 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		Payload:          buf.Bytes(),
 		EncryptionAlgo:   r.FormValue("payload-encoding"),
 		OutputFormat:     r.FormValue("output-format"),
+		OutputName:       r.FormValue("out-name"),
 		ExecutionMethod:  r.FormValue("exec-method"),
 		InjectMethod:     r.FormValue("inject-method"),
 		ExecDelay:        execDelay,
@@ -195,7 +197,7 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 
 		return
 	} else {
-		w.Header().Set("Content-Disposition", "attachment; filename=cloak.exe")
+		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s.exe", generateJson.OutputName))
 		w.Header().Set("Content-Type", "application/octet-stream")
 
 		w.Write(payload)

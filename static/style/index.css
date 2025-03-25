@@ -245,6 +245,11 @@ input[type="text"] {
     padding-right: 5px;
 }
 
+.output-name label {
+    color: #ffffff;
+    font-weight: normal;
+}
+
 .metadata-field {
     display: none;
 }
