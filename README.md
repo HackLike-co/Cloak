@@ -55,7 +55,8 @@ go build .
     - [X] Execution Delay
     - [ ] API Hammering
 - [ ] File Bloating
-- [ ] Custom Binary Metadata
+- [X] Custom Binary Metadata
+- [ ] Custom Binary Icon
 - [ ] Modify Creation Date/Time
 
 ### Guardrails
