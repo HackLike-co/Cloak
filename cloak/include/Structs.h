@@ -4,7 +4,7 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-#include <Windows.h>
+#include <windows.h>
 
 
 typedef struct _UNICODE_STRING {

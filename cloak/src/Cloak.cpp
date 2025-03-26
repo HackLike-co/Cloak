@@ -2,16 +2,6 @@
 #include "Payload.hpp"
 
 int main() {
-
-    printf(__TIMESTAMP__);
-    printf("\n");
-
-    #undef __TIMESTAMP__
-    #define __TIMESTAMP__ "Mon Mar 18 19:18:03 2025"
-
-    printf(__TIMESTAMP__);
-    printf("\n");
-
     #ifdef CHECK_HOSTNAME
     if ( ! CheckHostname( HOSTNAME ) ) {
         #ifdef DEBUG

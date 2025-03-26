@@ -4,8 +4,10 @@
 #define CLOAK_H
 
 #include "Config.hpp"
+#include "Cloak.hpp"
 
 #include <windows.h>
+#include <winternl.h>
 #include <stdio.h>
 
 #ifdef AES
