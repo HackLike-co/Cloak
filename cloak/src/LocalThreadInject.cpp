@@ -18,18 +18,16 @@ constexpr int RandomCompileTimeSeed(void)
 constexpr auto g_KEY = RandomCompileTimeSeed() % RAND;
 
 constexpr DWORD HashStringCrc32(const char* String) {
-	UINT32      uMask	= 0x00,
-				uHash	= g_KEY;
+	UINT32      uMask	= 0x00;
+    UINT32      uHash	= g_KEY;
 	INT         i		= 0x00;
 
-	while (String[i] != 0) {
+	while ( String[i] != 0 ) {
+		uHash = uHash ^ ( UINT32 ) String[i];
 
-		uHash = uHash ^ (UINT32)String[i];
-
-		for (int ii = 0; ii < 8; ii++) {
-
-			uMask = -1 * (uHash & 1);
-			uHash = (uHash >> 1) ^ (0xEDB88320 & uMask);
+		for ( int ii = 0; ii < 8; ii++ ) {
+			uMask = -1 * ( uHash & 1 );
+			uHash = ( uHash >> 1 ) ^ ( 0xEDB88320 & uMask );
 		}
 
 		i++;
@@ -38,35 +36,34 @@ constexpr DWORD HashStringCrc32(const char* String) {
 	return ~uHash;
 }
 
-#define RTIME_HASHA( API ) HashStringCrc32((const char*) API)
-#define CTIME_HASHA( API ) constexpr auto API##_Rotr32A = HashStringCrc32((const char*) #API);
+#define RTIME_HASHA( API ) HashStringCrc32( ( const char* ) API )
+#define CTIME_HASHA( API ) constexpr auto API##_Rotr32A = HashStringCrc32( ( const char* ) #API );
 
 FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
+	PBYTE pBase = ( PBYTE ) hModule;
 
-	PBYTE pBase = (PBYTE)hModule;
+	PIMAGE_DOS_HEADER   pImgDosHeader  = ( PIMAGE_DOS_HEADER ) pBase;
+	if ( pImgDosHeader->e_magic != IMAGE_DOS_SIGNATURE ) {
+        return NULL;
+    }
 
-	PIMAGE_DOS_HEADER			pImgDosHdr				= (PIMAGE_DOS_HEADER)pBase;
-	if (pImgDosHdr->e_magic != IMAGE_DOS_SIGNATURE)
+	PIMAGE_NT_HEADERS   pImgNtHeaders  = ( PIMAGE_NT_HEADERS ) ( pBase + pImgDosHeader->e_lfanew );
+	if ( pImgNtHeaders->Signature != IMAGE_NT_SIGNATURE ) {
 		return NULL;
+    }
 
-	PIMAGE_NT_HEADERS			pImgNtHdrs				= (PIMAGE_NT_HEADERS)(pBase + pImgDosHdr->e_lfanew);
-	if (pImgNtHdrs->Signature != IMAGE_NT_SIGNATURE)
-		return NULL;
+	IMAGE_OPTIONAL_HEADER		ImgOptionalHeader		= pImgNtHeaders->OptionalHeader;
+	PIMAGE_EXPORT_DIRECTORY		pImgExportDirectory     = ( PIMAGE_EXPORT_DIRECTORY ) ( pBase + ImgOptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress );
+	PDWORD						pdwFunctionNameArray	= ( PDWORD ) ( pBase + pImgExportDirectory->AddressOfNames );
+	PDWORD						pdwFunctionAddressArray	= ( PDWORD ) ( pBase + pImgExportDirectory->AddressOfFunctions );
+	PWORD						pwFunctionOrdinalArray	= ( PWORD ) ( pBase + pImgExportDirectory->AddressOfNameOrdinals );
 
-	IMAGE_OPTIONAL_HEADER		ImgOptHdr				= pImgNtHdrs->OptionalHeader;
+	for ( DWORD i = 0; i < pImgExportDirectory->NumberOfFunctions; i++ ) {
+		CHAR*	pFunctionName		= ( CHAR* ) ( pBase + pdwFunctionNameArray[i] );
+		PVOID	pFunctionAddr   	= ( PVOID ) ( pBase + pdwFunctionAddressArray[pwFunctionOrdinalArray[i]] );
 
-	PIMAGE_EXPORT_DIRECTORY		pImgExportDir			= (PIMAGE_EXPORT_DIRECTORY)(pBase + ImgOptHdr.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
-
-	PDWORD						FunctionNameArray		= (PDWORD)(pBase + pImgExportDir->AddressOfNames);
-	PDWORD						FunctionAddressArray	= (PDWORD)(pBase + pImgExportDir->AddressOfFunctions);
-	PWORD						FunctionOrdinalArray	= (PWORD)(pBase + pImgExportDir->AddressOfNameOrdinals);
-
-	for (DWORD i = 0; i < pImgExportDir->NumberOfFunctions; i++) {
-		CHAR*	pFunctionName		= (CHAR*)(pBase + FunctionNameArray[i]);
-		PVOID	pFunctionAddress	= (PVOID)(pBase + FunctionAddressArray[FunctionOrdinalArray[i]]);
-
-		if (dwApiNameHash == RTIME_HASHA(pFunctionName)) { // runtime hash value check 
-			return (FARPROC)pFunctionAddress;
+		if ( dwApiNameHash == RTIME_HASHA( pFunctionName ) ) { 
+			return ( FARPROC ) pFunctionAddr;
 		}
 	}
 
