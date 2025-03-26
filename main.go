@@ -26,9 +26,9 @@ func main() {
 	mux.Handle("/", http.FileServer(http.Dir("./static")))
 
 	// api handlers
-	mux.Handle("/api/version", http.HandlerFunc(api.Version)) // get cloak version
-	mux.Handle("/api/f2j", http.HandlerFunc(api.FormToJson))  // convert form data to json data
-	mux.Handle("/api/generate", http.HandlerFunc(api.Generate))
+	mux.Handle("/api/version", http.HandlerFunc(api.Version))   // get cloak version
+	mux.Handle("/api/f2j", http.HandlerFunc(api.FormToJson))    // convert form data to json data
+	mux.Handle("/api/generate", http.HandlerFunc(api.Generate)) // endpoint for actual payload generation
 
 	log.Printf("Starting Cloak Server on http://%s:%d\n", *lhost, *lport)
 	http.ListenAndServe(fmt.Sprintf("%s:%d", *lhost, *lport), mux)
