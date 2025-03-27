@@ -1,6 +1,6 @@
 #include "Cloak.hpp"
 
-#ifdef HASH_API
+#if defined(HASH_API) && ( defined(LOCAL_THREAD_HIJACK) || defined(LOCAL_THREAD_HIJACK_ENUM) )
 constexpr int RandomCompileTimeSeed(void)
 {
 	return '0' * -23784 +
@@ -133,7 +133,7 @@ BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
     
     HMODULE hKernel32 = NULL;
 
-    if ( ( hKernel32 = LoadLibraryA( "KERNEL32.DLL" ) ) == NULL ) {
+    if ( ( hKernel32 = LoadLibraryA( "KERNEL32.dll" ) ) == NULL ) {
         #ifdef DEBUG
         printf( "[-] LoadLibraryA Failed with Error -> %d\n", GetLastError() );
         #endif // !DEBUG
@@ -420,7 +420,7 @@ BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
     
     HMODULE hKernel32 = NULL;
 
-    if ( ( hKernel32 = LoadLibraryA( "KERNEL32.DLL" ) ) == NULL ) {
+    if ( ( hKernel32 = LoadLibraryA( "KERNEL32.dll" ) ) == NULL ) {
         #ifdef DEBUG
         printf( "[-] LoadLibraryA Failed with Error -> %d\n", GetLastError() );
         #endif // !DEBUG
