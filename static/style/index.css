@@ -234,6 +234,24 @@ input[type="text"] {
     display: none;
 }
 
+.evasion-field legend {
+    font-weight: bold;
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.evasion-field img {
+    float: left;
+    padding-right: 5px;
+}
+
+.evasion-checks label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 25px;
+    color: #ffffff;
+}
+
 .output-field legend {
     font-weight: bold;
     font-size: 24px;

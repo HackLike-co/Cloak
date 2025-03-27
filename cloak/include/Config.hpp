@@ -3,12 +3,12 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define DEBUG
+#define AES
 
 #define HASH_API
-#define RAND 0xA4
+#define RAND 0xE5
 
-#define APC_INJECT
+#define FIBERS
 
 #define WAIT_TIME INFINITE
 

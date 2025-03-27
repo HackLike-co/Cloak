@@ -11,6 +11,7 @@ type Generate struct {
 	ExecDelay        int    `json:"delay"`
 	CheckHostname    bool   `json:"checkHost"`
 	Hostname         string `json:"hostname"`
+	DoApiHashing     bool   `json:"doApiHashing"`
 	Debug            bool   `json:"debug"`
 	CompanyName      string `json:"company"`
 	FileVersion      string `json:"fileVersion"`

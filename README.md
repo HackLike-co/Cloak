@@ -6,8 +6,7 @@
 Generate Secure Payloads
 
 ## Goals for v0.3
-- [ ] Api-Hashing
-- [ ] IAT Camouflage
+- [X] Api-Hashing
 - [ ] DLL Unhooking
 - [ ] Entropy Reduction
 - [ ] File Bloating
@@ -53,7 +52,7 @@ go build .
 - [ ] ETW Patching
 - [ ] DLL Unhooking
 - [ ] IAT Camouflage
-- [ ] API Hashing
+- [X] API Hashing (Compile Time)
 - [ ] Anti-Debug
     - [ ] Debugger Detection
     - [ ] Self-Delete

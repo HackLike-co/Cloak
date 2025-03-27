@@ -34,6 +34,7 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		execDelay     int    = 0
+		doApiHashing  bool   = false
 		checkHostname bool   = false
 		debug         bool   = false
 		fVersion      string = "1.0.0.0"
@@ -104,11 +105,15 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		checkHostname = true
 	}
 
+	if r.FormValue("api-hash") == "true" {
+		doApiHashing = true
+	}
+
 	if r.FormValue("debug") == "true" {
 		debug = true
 	}
 
-	if !slices.Contains(validIcons, r.FormValue("icon")) {
+	if r.FormValue("metadata") == "true" && !slices.Contains(validIcons, r.FormValue("icon")) {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Invalid icon"))
 
@@ -177,6 +182,7 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		ExecDelay:        execDelay,
 		CheckHostname:    checkHostname,
 		Hostname:         r.FormValue("hostname-to-check"),
+		DoApiHashing:     doApiHashing,
 		Debug:            debug,
 		FileVersion:      fVersion,
 		CompanyName:      r.FormValue("company-name"),

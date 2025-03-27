@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/exec"
@@ -102,6 +103,12 @@ func generate(g transport.Generate) ([]byte, error) {
 		configOutput += fmt.Sprintf("#define CHECK_HOSTNAME\n\n#ifdef CHECK_HOSTNAME\n#define HOSTNAME \"%s\"\nBOOL CheckHostname(IN LPSTR pwGuardHost);\n#endif\n\n", g.Hostname)
 	}
 
+	if g.DoApiHashing {
+		// generate rand
+		r := rand.Intn(255-1) + 1
+		configOutput += fmt.Sprintf("#define HASH_API\n#define RAND 0x%02X\n\n", r)
+	}
+
 	switch g.ExecutionMethod {
 	case "inject":
 		switch g.InjectMethod {
@@ -138,7 +145,7 @@ func generate(g transport.Generate) ([]byte, error) {
 
 	var resrcOutput string
 
-	if g.Icon != "none" {
+	if g.Icon != "none" && g.Icon != "invalid" {
 		resrcOutput += fmt.Sprintf("ID ICON icons/%s.ico\n", g.Icon)
 	}
 
