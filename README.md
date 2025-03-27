@@ -5,12 +5,6 @@
 # Cloak
 Generate Secure Payloads
 
-## Goals for v0.3
-- [X] Api-Hashing
-- [ ] DLL Unhooking
-- [ ] Entropy Reduction
-- [ ] File Bloating
-
 ## Quick Start
 ```
 git clone https://github.com/HackLike-co/Cloak.git
