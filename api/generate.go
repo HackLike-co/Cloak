@@ -112,7 +112,7 @@ func generate(g transport.Generate) ([]byte, error) {
 		case "local-hijack-enum":
 			configOutput += "#define LOCAL_THREAD_HIJACK_ENUM\n\n"
 		case "apc":
-			configOutput += "#define APC\n\n"
+			configOutput += "#define APC_INJECT\n\n"
 		default:
 			return nil, errors.New("invalid injection method")
 		}

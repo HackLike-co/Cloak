@@ -8,7 +8,7 @@
 #define HASH_API
 #define RAND 0xA4
 
-#define FIBERS
+#define APC_INJECT
 
 #define WAIT_TIME INFINITE
 

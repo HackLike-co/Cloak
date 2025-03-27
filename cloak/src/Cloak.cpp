@@ -95,7 +95,7 @@ int main() {
     }
     #endif // !LOCAL_THREAD_HIJACK_ENUM
 
-    #ifdef APC
+    #ifdef APC_INJECT
     if ( ! ApcInjection( pbPayload, sizeof( Payload ) ) ) {
         #ifdef DEBUG
         printf( "[-] Failed to Execute Payload\n");
@@ -103,7 +103,7 @@ int main() {
         
         return 1;
     }
-    #endif // !APC
+    #endif // !APC_INJECT
 
     #ifdef FIBERS
     if ( ! FiberExec( pbPayload, sizeof( Payload ) ) ) {

@@ -42,10 +42,10 @@ VOID GottaCatchEmAll(); // useless function
 BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize);
 #endif //! LOCAL_THREAD_HIJACK_ENUM
 
-#ifdef APC
+#ifdef APC_INJECT
 VOID WaitForSingleObjectExAlertable();
 BOOL ApcInjection(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize);
-#endif // !APC
+#endif // !APC_INJECT
 
 #ifdef FIBERS
 BOOL FiberExec(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize);

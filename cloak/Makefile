@@ -8,7 +8,7 @@ CCx64 = /usr/bin/x86_64-w64-mingw32-g++
 CFLAGS	  =  -Os -fno-asynchronous-unwind-tables -masm=intel
 CFLAGS	  += -fno-ident -fpack-struct=8 -falign-functions=1
 CFLAGS    += -s -ffunction-sections -falign-jumps=1 -w
-CFLAGS	  += -falign-labels=1 -fPIC
+CFLAGS	  += -falign-labels=1 -fPIC -fpermissive
 CFLAGS	  += -Wl,-s,--no-seh,--enable-stdcall-fixup
 CFLAGS	  += 
 
