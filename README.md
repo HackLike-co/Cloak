@@ -12,6 +12,7 @@ cd Cloak
 go build .
 ./cloak.exe
 ```
+> Note: The binary must be run within the "Cloak" directory to properly function
 
 <p align="center">
     <img src="https://github.com/HackLike-co/Cloak/blob/main/images/cloak_ui.png?raw=true">
