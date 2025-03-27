@@ -8,7 +8,7 @@
 #define HASH_API
 #define RAND 0xA4
 
-#define LOCAL_THREAD
+#define THREADPOOLWAIT
 
 #define WAIT_TIME INFINITE
 

