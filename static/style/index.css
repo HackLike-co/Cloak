@@ -263,6 +263,16 @@ input[type="text"] {
     padding-right: 5px;
 }
 
+.dll-name {
+    margin-bottom: 15px;
+    display: none;
+}
+
+.dll-name label {
+    color: #ffffff;
+    font-weight: normal;
+}
+
 .output-name label {
     color: #ffffff;
     font-weight: normal;

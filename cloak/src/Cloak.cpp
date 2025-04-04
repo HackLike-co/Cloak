@@ -1,7 +1,8 @@
 #include "Cloak.hpp"
 #include "Payload.hpp"
 
-int main() {
+int CloakMain(PVOID Reserved) {
+
     #ifdef CHECK_HOSTNAME
     if ( ! CheckHostname( HOSTNAME ) ) {
         #ifdef DEBUG

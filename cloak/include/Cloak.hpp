@@ -10,6 +10,12 @@
 #include <winternl.h>
 #include <stdio.h>
 
+int CloakMain(PVOID Reserved);
+
+#ifdef DLL
+#define DLLEXPORT __declspec( dllexport )
+#endif // !DLL
+
 #ifdef AES
 #include "aes.h"
 #endif // !AES

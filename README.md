@@ -26,7 +26,7 @@ go build .
 
 ### Output Formats
 - [X] EXE
-- [ ] DLL
+- [X] DLL
 
 ### Execution Options
 - [X] Fibers

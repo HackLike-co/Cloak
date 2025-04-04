@@ -170,9 +170,17 @@
     
                             <option value="invalid">Select an Output Format</option>
                             <option value="exe">EXE</option>
+                            <option value="dll">DLL</option>
         
                         </select>
     
+                    </div>
+
+                    <div class="dll-name">
+
+                        <label for="dll-name">Exported Function:</label>
+                        <input type="text" name="dll-name" id="dll-name">
+
                     </div>
 
                     <div class="output-name">
@@ -346,6 +354,21 @@
             });
 
             */
+
+            let outFormat = document.getElementById("output-dropdown");
+            let dllNameClass = document.getElementsByClassName("dll-name");
+
+            outFormat.addEventListener("change", function(event) {
+                if (event.target.value === "dll") {
+                    for (i = 0; i < dllNameClass.length; i++) {
+                        dllNameClass[i].style.display = "block";
+                    }
+                } else {
+                    for (i = 0; i < dllNameClass.length; i++) {
+                        dllNameClass[i].style.display = "none";
+                    }
+                }
+            });
 
             let metaCheck = document.getElementById("md-box");
             let metaField = document.getElementById("metadata-field");

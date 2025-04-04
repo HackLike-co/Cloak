@@ -38,6 +38,8 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		checkHostname bool   = false
 		debug         bool   = false
 		fVersion      string = "1.0.0.0"
+		exportFunc    string = ""
+		outName       string = "cloak"
 		// checkDomainName   bool = false
 		// checkDomainJoined bool = false
 		// checkSubnet       bool = false
@@ -120,6 +122,13 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if r.FormValue("dll-name") == "" {
+		exportFunc = "Start"
+	} else {
+		exportFunc = r.FormValue("dll-name")
+	}
+	fmt.Println(r.FormValue("dll-name"))
+
 	// check for domain name if box checked
 	// if r.FormValue("check-domain") == "true" && r.FormValue("domain-name-to-check") == "" {
 	// 	w.WriteHeader(http.StatusBadRequest)
@@ -154,6 +163,10 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fVersion = strings.Replace(r.FormValue("file-version"), ".", ",", -1)
 	}
+
+	if r.FormValue("out-name") != "" {
+		outName = r.FormValue("out-name")
+	}
 	/*
 		End Error Checking
 	*/
@@ -176,13 +189,14 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		Payload:          buf.Bytes(),
 		EncryptionAlgo:   r.FormValue("payload-encoding"),
 		OutputFormat:     r.FormValue("output-format"),
-		OutputName:       r.FormValue("out-name"),
+		OutputName:       outName,
 		ExecutionMethod:  r.FormValue("exec-method"),
 		InjectMethod:     r.FormValue("inject-method"),
 		ExecDelay:        execDelay,
 		CheckHostname:    checkHostname,
 		Hostname:         r.FormValue("hostname-to-check"),
 		DoApiHashing:     doApiHashing,
+		ExportedFunc:     exportFunc,
 		Debug:            debug,
 		FileVersion:      fVersion,
 		CompanyName:      r.FormValue("company-name"),
@@ -203,7 +217,7 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 
 		return
 	} else {
-		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s.exe", generateJson.OutputName))
+		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s.%s", generateJson.OutputName, generateJson.OutputFormat))
 		w.Header().Set("Content-Type", "application/octet-stream")
 
 		w.Write(payload)

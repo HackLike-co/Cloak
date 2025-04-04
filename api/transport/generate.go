@@ -12,6 +12,7 @@ type Generate struct {
 	CheckHostname    bool   `json:"checkHost"`
 	Hostname         string `json:"hostname"`
 	DoApiHashing     bool   `json:"doApiHashing"`
+	ExportedFunc     string `json:"exportedFunction"`
 	Debug            bool   `json:"debug"`
 	CompanyName      string `json:"company"`
 	FileVersion      string `json:"fileVersion"`

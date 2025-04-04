@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
 
 	gecko "github.com/HackLike-co/Gecko/Gecko"
 )
@@ -83,6 +84,10 @@ func generate(g transport.Generate) ([]byte, error) {
 
 	configOutput := "#pragma once\n\n#ifndef CONFIG_H\n#define CONFIG_H\n\n"
 
+	if g.OutputFormat == "dll" {
+		configOutput += "#define DLL\n\n"
+	}
+
 	switch g.EncryptionAlgo {
 	case "aes":
 		configOutput += "#define AES\n\n"
@@ -136,6 +141,11 @@ func generate(g transport.Generate) ([]byte, error) {
 	// write to config file
 	configFile.WriteString(configOutput)
 
+	// if dll, open main file and replace exported function name
+	if g.OutputFormat == "dll" {
+		replaceFuncName("./cloak/src/Main.cpp", "Start", g.ExportedFunc)
+	}
+
 	// open resource file
 	rFile, err := os.OpenFile("./cloak/cloak.rc", os.O_RDWR|os.O_TRUNC, 0755)
 	if err != nil {
@@ -164,13 +174,31 @@ func generate(g transport.Generate) ([]byte, error) {
 	rFile.WriteString(resrcOutput)
 
 	// run make
-	cmd := fmt.Sprintf("make -C ./cloak/ NAME=%s", g.OutputName)
+	var cmd string
+	if g.OutputFormat == "dll" {
+		cmd = fmt.Sprintf("make dll -C ./cloak/ NAME=%s", g.OutputName)
+	} else {
+		cmd = fmt.Sprintf("make exe -C ./cloak/ NAME=%s", g.OutputName)
+	}
 	cmdNoReturn(cmd)
 
 	// read generated file
-	fPayload, err := os.ReadFile(fmt.Sprintf("./cloak/bin/%s.exe", g.OutputName))
-	if err != nil {
-		return nil, err
+	var fPayload []byte
+	if g.OutputFormat == "dll" {
+		fPayload, err = os.ReadFile(fmt.Sprintf("./cloak/bin/%s.dll", g.OutputName))
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		fPayload, err = os.ReadFile(fmt.Sprintf("./cloak/bin/%s.exe", g.OutputName))
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// replace function name back to start if dll
+	if g.OutputFormat == "dll" {
+		replaceFuncName("./cloak/src/Main.cpp", g.ExportedFunc, "Start")
 	}
 
 	// return generated payload
@@ -180,4 +208,27 @@ func generate(g transport.Generate) ([]byte, error) {
 func cmdNoReturn(c string) {
 	cmd := exec.Command("bash", "-c", c)
 	cmd.Run()
+}
+
+func replaceFuncName(fPath string, og string, new string) error {
+	f, err := os.ReadFile(fPath)
+	if err != nil {
+		return err
+	}
+
+	lines := strings.Split(string(f), "\n")
+
+	for i, line := range lines {
+		if strings.Contains(line, fmt.Sprintf("DLLEXPORT VOID %s", og)) {
+			lines[i] = fmt.Sprintf("DLLEXPORT VOID %s() {", new)
+		}
+	}
+
+	out := strings.Join(lines, "\n")
+	err = os.WriteFile(fPath, []byte(out), 0755)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
