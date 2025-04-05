@@ -16,6 +16,11 @@ int CloakMain(PVOID Reserved);
 #define DLLEXPORT __declspec( dllexport )
 #endif // !DLL
 
+#ifdef ANTI_DEBUG
+// return FALSE if being debugged
+BOOL IsDebuggerPresent();
+#endif // !ANTI_DEBUG
+
 #ifdef AES
 #include "aes.h"
 #endif // !AES

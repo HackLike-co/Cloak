@@ -176,21 +176,21 @@ func generate(g transport.Generate) ([]byte, error) {
 	// run make
 	var cmd string
 	if g.OutputFormat == "dll" {
-		cmd = fmt.Sprintf("make dll -C ./cloak/ NAME=%s", g.OutputName)
+		cmd = "make dll -C ./cloak/"
 	} else {
-		cmd = fmt.Sprintf("make exe -C ./cloak/ NAME=%s", g.OutputName)
+		cmd = "make exe -C ./cloak/"
 	}
 	cmdNoReturn(cmd)
 
 	// read generated file
 	var fPayload []byte
 	if g.OutputFormat == "dll" {
-		fPayload, err = os.ReadFile(fmt.Sprintf("./cloak/bin/%s.dll", g.OutputName))
+		fPayload, err = os.ReadFile("./cloak/bin/cloak.dll")
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		fPayload, err = os.ReadFile(fmt.Sprintf("./cloak/bin/%s.exe", g.OutputName))
+		fPayload, err = os.ReadFile("./cloak/bin/cloak.exe")
 		if err != nil {
 			return nil, err
 		}
