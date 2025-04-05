@@ -6,11 +6,17 @@
 Generate Secure Payloads
 
 ## Quick Start
+Cloak is designed to be run on Debian based distros
+```
+sudo apt install -y mingw-w64
+```
+> mingw is a requirement for building cloak. If you don't have Go installed (and don't want to install it) you can download a compiled release
+
 ```
 git clone https://github.com/HackLike-co/Cloak.git
 cd Cloak
 go build .
-./cloak.exe
+./cloak
 ```
 > Note: The binary must be run within the "Cloak" directory to properly function
 
@@ -56,6 +62,7 @@ go build .
     - [X] Execution Delay
     - [ ] API Hammering
 - [ ] File Bloating
+- [ ] Entropy Reduction
 - [X] Custom Binary Metadata
 - [X] Custom Binary Icon
 - [ ] Modify Creation Date/Time
