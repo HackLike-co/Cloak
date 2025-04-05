@@ -19,7 +19,6 @@ func Generate(w http.ResponseWriter, r *http.Request) {
 }
 
 func generate(g transport.Generate) ([]byte, error) {
-
 	// open Payload.hpp file
 	pFile, err := os.OpenFile("./cloak/include/Payload.hpp", os.O_RDWR|os.O_TRUNC, 0755)
 	if err != nil {
