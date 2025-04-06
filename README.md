@@ -8,7 +8,7 @@ Generate Secure Payloads
 ## Quick Start
 Cloak is designed to be run on Debian based distros
 ```
-sudo apt install -y mingw-w64
+sudo apt install -y make mingw-w64
 ```
 > mingw is a requirement for building cloak. If you don't have Go installed (and don't want to install it) you can download a compiled release
 
