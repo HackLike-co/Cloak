@@ -1,4 +1,4 @@
-module cloak
+module cloak-ui
 
 go 1.24.0
 

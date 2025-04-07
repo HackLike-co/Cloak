@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cloak/api"
+	"cloak-ui/api"
 	"fmt"
 	"log"
 	"net/http"

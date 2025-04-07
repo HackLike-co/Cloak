@@ -1,7 +1,7 @@
 package api
 
 import (
-	"cloak/api/transport"
+	"cloak-ui/api/transport"
 	"errors"
 	"fmt"
 	"log"
