@@ -17,9 +17,14 @@ int CloakMain(PVOID Reserved);
 #endif // !DLL
 
 #ifdef ANTI_DEBUG
-// return FALSE if being debugged
+// return TRUE if being debugged
 BOOL IsDebuggerPresent();
 #endif // !ANTI_DEBUG
+
+#ifdef ANTI_VM
+// return TRUE if in VM
+BOOL IsVm();
+#endif // !ANTI_VM
 
 #ifdef AES
 #include "aes.h"
