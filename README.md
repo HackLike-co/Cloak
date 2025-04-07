@@ -20,6 +20,14 @@ go build .
 ```
 > Note: The binary must be run within the "Cloak" directory to properly function
 
+Or you can run it as a docker container
+```
+git clone https://github.com/HackLike-co/Cloak.git
+cd Cloak
+sudo docker build . --tag cloak
+sudo docker run --publish 8080:8080 cloak
+```
+
 <p align="center">
     <img src="https://github.com/HackLike-co/Cloak/blob/main/images/cloak_ui.png?raw=true">
 </p>
