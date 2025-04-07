@@ -13,7 +13,7 @@ import (
 func main() {
 	parser := argparse.NewParser("cloak", "generate secure stagers")
 
-	lhost := parser.String("l", "lhost", &argparse.Options{Required: false, Default: "127.0.0.1", Help: "host for Cloak to listen on"})
+	lhost := parser.String("l", "lhost", &argparse.Options{Required: false, Default: "0.0.0.0", Help: "host for Cloak to listen on"})
 	lport := parser.Int("p", "lport", &argparse.Options{Required: false, Default: 8080, Help: "port for Cloak to listen on"})
 
 	if err := parser.Parse(os.Args); err != nil {
