@@ -37,32 +37,47 @@ BOOL IsVm() {
     GetSystemInfo(&si);
 
     if ( si.dwNumberOfProcessors < 2 ) {
+        #ifdef DEBUG
+        printf( "[*] VM Detected -> CPU COUNT\n" );
+        #endif // !DEBUG
+
         return TRUE;
     }
 
     // check memory
-    MEMORYSTATUSEX ms = { .dwLength = sizeof( MEMORYSTATUSEX ) };
+    // MEMORYSTATUSEX ms = { 0x00 };
+    // ms.dwLength = sizeof( MEMORYSTATUSEX );
 
-    if ( ! GlobalMemoryStatusEx( &ms ) ) {
-        #ifdef DEBUG
-        printf( "[-] GlobalMemoryStatusEx Failed with Error -> %d\n", GetLastError() );
-        #endif // !DEBUG
+    // if ( ! GlobalMemoryStatusEx( &ms ) ) {
+    //     #ifdef DEBUG
+    //     printf( "[-] GlobalMemoryStatusEx Failed with Error -> %d\n", GetLastError() );
+    //     #endif // !DEBUG
         
-        return FALSE;
-    }
+    //     return FALSE;
+    // }
 
-    if ( ( DWORD ) ms.ullTotalPhys < ( DWORD ) ( 2 * GB ) ) {
-        return TRUE;
-    }
+    // if ( ( DWORD ) ms.ullTotalPhys < ( DWORD ) ( 2 * GB ) ) {
+    //     #ifdef DEBUG
+    //     printf( "[*] VM Detected -> MEMORY\n" );
+    //     printf( "[*] 2 * GB = %llu\n", ( 2 * GB ) );
+    //     printf( "[*] Memory -> %llu bytes\n", ms.ullTotalPhys );
+    //     printf( "[*] mem < 2 -> %d\n", ( ms.ullTotalPhys < ( 2 * GB ) ) );
+    //     #endif // !DEBUG
+
+    //     return TRUE;
+    // }
 
     BOOL isVm = FALSE;
     EnumDisplayMonitors( NULL, NULL, ( MONITORENUMPROC ) CheckResolution, ( LPARAM ) ( & isVm ) );
     if ( isVm ) {
+        #ifdef DEBUG
+        printf( "[*] VM Detected -> Resolution\n" );
+        #endif // !DEBUG
+
         return TRUE;
     }
 
     return FALSE;
-
 }
 
 #endif // !ANTI_VM
