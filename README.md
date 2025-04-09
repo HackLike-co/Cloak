@@ -39,22 +39,25 @@ go build .
 - [X] CreateThreadPoolWait
 - [X] Injection
     - [X] Local Thread
-    - [ ] Remote Thread
+    - [ ] Remote Thread*
     - [X] Local Thread Hijack (CreateThread)
     - [X] Local Thread Hijack (EnumThread)
-    - [ ] Remote Thread Hijack
+    - [ ] Remote Thread Hijack*
     - [X] APC
-    - [ ] EarlyBird APC
+    - [ ] EarlyBird APC*
     - [ ] EarlyCascade
 
 ### Evasion
+- [ ] Direct Syscalls
+- [ ] Indirect Syscalls
+- [ ] Callstack Spoofing
 - [X] Payload Encryption/Encoding
-- [ ] AMSI Patching
-- [ ] ETW Patching
-- [ ] DLL Unhooking
-- [ ] IAT Camouflage
+- [ ] AMSI Patching*
+- [ ] ETW Patching*
+- [ ] DLL Unhooking*
+- [ ] IAT Camouflage*
 - [X] API Hashing (Compile Time)
-- [ ] Anti-Debug
+- [ ] Anti-Debug*
     - [ ] Debugger Detection
     - [ ] Self-Delete
 - [ ] Anti-VM
@@ -66,11 +69,13 @@ go build .
     - [X] Execution Delay
         - [ ] API Hammering
         = [X] WaitForSingleObject
-- [ ] File Bloating
-- [ ] Entropy Reduction
+- [ ] File Bloating*
+- [ ] Entropy Reduction*
 - [X] Custom Binary Metadata
 - [X] Custom Binary Icon
 - [ ] Modify Creation Date/Time
+
+> *v1.0 Goals
 
 ### Guardrails
 - [X] Hostname
