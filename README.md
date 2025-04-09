@@ -47,42 +47,55 @@ sudo docker run --publish 8080:8080 cloak
 - [X] CreateThreadPoolWait
 - [X] Injection
     - [X] Local Thread
-    - [ ] Remote Thread
+    - [ ] Remote Thread*
     - [X] Local Thread Hijack (CreateThread)
     - [X] Local Thread Hijack (EnumThread)
-    - [ ] Remote Thread Hijack
+    - [ ] Remote Thread Hijack*
     - [X] APC
-    - [ ] EarlyBird APC
+    - [ ] EarlyBird APC*
     - [ ] EarlyCascade
 
 ### Evasion
+- [ ] Direct Syscalls
+- [ ] Indirect Syscalls
+- [ ] Callstack Spoofing
+- [ ] Chunking
 - [X] Payload Encryption/Encoding
-- [ ] AMSI Patching
-- [ ] ETW Patching
-- [ ] DLL Unhooking
-- [ ] IAT Camouflage
+- [ ] AMSI Patching* (HWBP)
+- [ ] ETW Patching* (BWBP)
+- [ ] DLL Unhooking*
+- [ ] IAT Camouflage*
 - [X] API Hashing (Compile Time)
-- [ ] Anti-Debug
+- [ ] String Hashing*
+- [ ] Anti-Debug*
     - [ ] Debugger Detection
     - [ ] Self-Delete
 - [ ] Anti-VM
-    - [ ] VM Detection
+    - [X] VM Detection
+        - [X] TPM Check
+        - [X] CPU Count
+        - [ ] RAM
+        - [X] Resolution
     - [X] Execution Delay
-    - [ ] API Hammering
-- [ ] File Bloating
-- [ ] Entropy Reduction
+        - [ ] API Hammering
+        = [X] WaitForSingleObject
+- [ ] File Bloating*
+- [ ] Entropy Reduction*
 - [X] Custom Binary Metadata
 - [X] Custom Binary Icon
 - [ ] Modify Creation Date/Time
 
 ### Guardrails
 - [X] Hostname
-- [ ] Domain Joined
-- [ ] Domain Name
-- [ ] Subnet
+- [ ] Domain Joined*
+- [ ] Domain Name*
+- [ ] Subnet*
+
+> *v1.0 Goals
 
 ## Known Issues
 - SetThreadpoolWait doesn't play nicely for API Hashing, need to figure out why
+- Checking the amount of memory acts funky in if statement
 
 ## References
 This project was inspired by the amazing EvadeX from [PhantomSec](https://phantomsec.tools) and OST from [Outflank](https://www.outflank.nl/products/outflank-security-tooling/). If you and your team has the funds, I highly recommend them. This is just a shitty knock off because it seemed like a fun project.
