@@ -4,7 +4,6 @@
 #define CONFIG_H
 
 #define DEBUG
-#define ANTI_VM
 
 #define FIBERS
 

@@ -51,12 +51,14 @@ go build .
 - [ ] Direct Syscalls
 - [ ] Indirect Syscalls
 - [ ] Callstack Spoofing
+- [ ] Chunking
 - [X] Payload Encryption/Encoding
-- [ ] AMSI Patching*
-- [ ] ETW Patching*
+- [ ] AMSI Patching* (HWBP)
+- [ ] ETW Patching* (BWBP)
 - [ ] DLL Unhooking*
 - [ ] IAT Camouflage*
 - [X] API Hashing (Compile Time)
+- [ ] String Hashing*
 - [ ] Anti-Debug*
     - [ ] Debugger Detection
     - [ ] Self-Delete
@@ -75,13 +77,13 @@ go build .
 - [X] Custom Binary Icon
 - [ ] Modify Creation Date/Time
 
-> *v1.0 Goals
-
 ### Guardrails
 - [X] Hostname
-- [ ] Domain Joined
-- [ ] Domain Name
-- [ ] Subnet
+- [ ] Domain Joined*
+- [ ] Domain Name*
+- [ ] Subnet*
+
+> *v1.0 Goals
 
 ## Known Issues
 - SetThreadpoolWait doesn't play nicely for API Hashing, need to figure out why
