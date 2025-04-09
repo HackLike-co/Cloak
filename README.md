@@ -3,7 +3,7 @@
 </p>
 
 # Cloak
-Generate Secure Payloads
+Generate Secure, Polymorphic, Evasive Payloads
 
 ## Quick Start
 Cloak is designed to be run on Debian based distros
