@@ -44,6 +44,19 @@ BOOL IsVm() {
         return TRUE;
     }
 
+    // check tpm
+    HANDLE hTpm = INVALID_HANDLE_VALUE;
+    hTpm = CreateFileA( "\\\\.\\TPM", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL );
+    if ( hTpm == INVALID_HANDLE_VALUE ) {
+        #ifdef DEBUG
+        printf( "[*] VM Detected -> No TPM\n" );
+        #endif // !DEBUG
+
+        return TRUE;
+    } else {
+        CloseHandle( hTpm );
+    }
+
     // check memory
     // MEMORYSTATUSEX ms = { 0x00 };
     // ms.dwLength = sizeof( MEMORYSTATUSEX );
