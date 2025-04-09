@@ -78,7 +78,7 @@ sudo docker run --publish 8080:8080 cloak
         - [X] Resolution
     - [X] Execution Delay
         - [ ] API Hammering
-        = [X] WaitForSingleObject
+        - [X] WaitForSingleObject
 - [ ] File Bloating*
 - [ ] Entropy Reduction*
 - [X] Custom Binary Metadata
