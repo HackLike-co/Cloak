@@ -59,6 +59,7 @@ go build .
     - [ ] Self-Delete
 - [ ] Anti-VM
     - [X] VM Detection
+        - [X] TPM Check
         - [X] CPU Count
         - [ ] RAM
         - [X] Resolution
