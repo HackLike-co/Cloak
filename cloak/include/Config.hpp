@@ -5,6 +5,10 @@
 
 #define DEBUG
 
+#define CHECK_HOSTNAME
+#define HOSTNAME "TEST"
+#define CHECK_DOMAIN_JOINED
+
 #define ANTI_DEBUG
 
 #define FIBERS

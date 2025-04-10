@@ -16,6 +16,14 @@ int CloakMain(PVOID Reserved);
 #define DLLEXPORT __declspec( dllexport )
 #endif // !DLL
 
+#ifdef CHECK_HOSTNAME
+BOOL CheckHostname(IN LPSTR pwGuardHost);
+#endif // !CHECK_HOSTNAME
+
+#ifdef CHECK_DOMAIN_JOINED
+BOOL CheckDomainJoined();
+#endif // !CHECK_DOMAIN_JOINED
+
 #ifdef ANTI_DEBUG
 // return TRUE if being debugged
 BOOL IsDebuggerPresent();

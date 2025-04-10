@@ -112,7 +112,11 @@ func generate(g transport.Generate) ([]byte, error) {
 	}
 
 	if g.CheckHostname {
-		configOutput += fmt.Sprintf("#define CHECK_HOSTNAME\n\n#ifdef CHECK_HOSTNAME\n#define HOSTNAME \"%s\"\nBOOL CheckHostname(IN LPSTR pwGuardHost);\n#endif\n\n", g.Hostname)
+		configOutput += fmt.Sprintf("#define CHECK_HOSTNAME\n\n#ifdef CHECK_HOSTNAME\n#define HOSTNAME \"%s\"\n#endif\n\n", g.Hostname)
+	}
+
+	if g.CheckDomainJoined {
+		configOutput += "#define CHECK_DOMAIN_JOINED\n\n"
 	}
 
 	if g.DoApiHashing {

@@ -43,7 +43,7 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		exportFunc    string = ""
 		outName       string = "cloak"
 		// checkDomainName   bool = false
-		// checkDomainJoined bool = false
+		checkDomainJoined bool = false
 		// checkSubnet       bool = false
 	)
 
@@ -167,6 +167,10 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 	// 	checkSubnet = true
 	// }
 
+	if r.FormValue("check-domain-joined") == "true" {
+		checkDomainJoined = true
+	}
+
 	// check fileversion has value
 	if r.FormValue("file-version") == "" {
 		fVersion = "1,0,0,0"
@@ -196,29 +200,30 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 
 	// convert to json struct
 	var generateJson transport.Generate = transport.Generate{
-		Payload:          buf.Bytes(),
-		EncryptionAlgo:   r.FormValue("payload-encoding"),
-		OutputFormat:     r.FormValue("output-format"),
-		OutputName:       outName,
-		ExecutionMethod:  r.FormValue("exec-method"),
-		InjectMethod:     r.FormValue("inject-method"),
-		ExecDelay:        execDelay,
-		CheckHostname:    checkHostname,
-		Hostname:         r.FormValue("hostname-to-check"),
-		DoApiHashing:     doApiHashing,
-		ExportedFunc:     exportFunc,
-		CheckVm:          checkVm,
-		CheckDebug:       checkDebug,
-		Debug:            debug,
-		FileVersion:      fVersion,
-		CompanyName:      r.FormValue("company-name"),
-		FileDescription:  r.FormValue("file-desc"),
-		ProductName:      r.FormValue("product-name"),
-		ProductVersion:   r.FormValue("product-version"),
-		InternalName:     r.FormValue("internal-name"),
-		OriginalFilename: r.FormValue("og-filename"),
-		Copyright:        r.FormValue("copyright"),
-		Icon:             r.FormValue("icon"),
+		Payload:           buf.Bytes(),
+		EncryptionAlgo:    r.FormValue("payload-encoding"),
+		OutputFormat:      r.FormValue("output-format"),
+		OutputName:        outName,
+		ExecutionMethod:   r.FormValue("exec-method"),
+		InjectMethod:      r.FormValue("inject-method"),
+		ExecDelay:         execDelay,
+		CheckHostname:     checkHostname,
+		CheckDomainJoined: checkDomainJoined,
+		Hostname:          r.FormValue("hostname-to-check"),
+		DoApiHashing:      doApiHashing,
+		ExportedFunc:      exportFunc,
+		CheckVm:           checkVm,
+		CheckDebug:        checkDebug,
+		Debug:             debug,
+		FileVersion:       fVersion,
+		CompanyName:       r.FormValue("company-name"),
+		FileDescription:   r.FormValue("file-desc"),
+		ProductName:       r.FormValue("product-name"),
+		ProductVersion:    r.FormValue("product-version"),
+		InternalName:      r.FormValue("internal-name"),
+		OriginalFilename:  r.FormValue("og-filename"),
+		Copyright:         r.FormValue("copyright"),
+		Icon:              r.FormValue("icon"),
 	}
 
 	// send generate request
