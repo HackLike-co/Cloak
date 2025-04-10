@@ -107,6 +107,10 @@ func generate(g transport.Generate) ([]byte, error) {
 		configOutput += "#define ANTI_VM\n\n"
 	}
 
+	if g.CheckDebug {
+		configOutput += "#define ANTI_DEBUG\n\n"
+	}
+
 	if g.CheckHostname {
 		configOutput += fmt.Sprintf("#define CHECK_HOSTNAME\n\n#ifdef CHECK_HOSTNAME\n#define HOSTNAME \"%s\"\nBOOL CheckHostname(IN LPSTR pwGuardHost);\n#endif\n\n", g.Hostname)
 	}

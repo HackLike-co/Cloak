@@ -3,6 +3,16 @@
 
 int CloakMain(PVOID Reserved) {
 
+    #ifdef ANTI_DEBUG
+    if ( IsDebugger() ) {
+        #ifdef DEBUG
+        printf( "[-] DEBUGGER DETECTED\n");
+        #endif // !DEBUG
+        
+        return 0;
+    }
+    #endif // !ANTI_DEBUG
+
     #ifdef ANTI_VM
     if ( IsVm() ) {
         #ifdef DEBUG

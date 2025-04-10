@@ -36,6 +36,8 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		execDelay     int    = 0
 		doApiHashing  bool   = false
 		checkHostname bool   = false
+		checkVm       bool   = false
+		checkDebug    bool   = false
 		debug         bool   = false
 		fVersion      string = "1.0.0.0"
 		exportFunc    string = ""
@@ -109,6 +111,14 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 
 	if r.FormValue("api-hash") == "true" {
 		doApiHashing = true
+	}
+
+	if r.FormValue("check-vm") == "true" {
+		checkVm = true
+	}
+
+	if r.FormValue("check-debug") == "true" {
+		checkDebug = true
 	}
 
 	if r.FormValue("debug") == "true" {
@@ -197,6 +207,8 @@ func FormToJson(w http.ResponseWriter, r *http.Request) {
 		Hostname:         r.FormValue("hostname-to-check"),
 		DoApiHashing:     doApiHashing,
 		ExportedFunc:     exportFunc,
+		CheckVm:          checkVm,
+		CheckDebug:       checkDebug,
 		Debug:            debug,
 		FileVersion:      fVersion,
 		CompanyName:      r.FormValue("company-name"),

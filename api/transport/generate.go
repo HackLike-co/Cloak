@@ -15,6 +15,7 @@ type Generate struct {
 	ExportedFunc     string `json:"exportedFunction"`
 	Debug            bool   `json:"debug"`
 	CheckVm          bool   `json:"checkVm"`
+	CheckDebug       bool   `json:"checkDebug"`
 	CompanyName      string `json:"company"`
 	FileVersion      string `json:"fileVersion"`
 	FileDescription  string `json:"fileDescription"`

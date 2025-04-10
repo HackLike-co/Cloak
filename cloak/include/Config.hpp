@@ -5,6 +5,8 @@
 
 #define DEBUG
 
+#define ANTI_DEBUG
+
 #define FIBERS
 
 #define WAIT_TIME INFINITE

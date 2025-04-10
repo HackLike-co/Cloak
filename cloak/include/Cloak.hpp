@@ -26,6 +26,10 @@ BOOL IsDebuggerPresent();
 BOOL IsVm();
 #endif // !ANTI_VM
 
+#ifdef ANTI_DEBUG
+BOOL IsDebugger();
+#endif // !ANTI_DEBUG
+
 #ifdef AES
 #include "aes.h"
 #endif // !AES
