@@ -59,8 +59,8 @@ sudo docker run --publish 8080:8080 cloak
     - [ ] EarlyCascade
 
 ### Evasion
-- [ ] Direct Syscalls
-- [ ] Indirect Syscalls
+- [ ] Direct Syscalls*
+- [ ] Indirect Syscalls*
 - [ ] Callstack Spoofing
 - [ ] Chunking
 - [X] Payload Encryption/Encoding
@@ -90,7 +90,7 @@ sudo docker run --publish 8080:8080 cloak
 
 ### Guardrails
 - [X] Hostname
-- [ ] Domain Joined*
+- [X] Domain Joined*
 - [ ] Domain Name*
 - [ ] Subnet*
 
