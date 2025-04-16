@@ -33,8 +33,8 @@ type dbPayload struct {
 	Time int
 }
 
-func payloadTable(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("./static/payloads.html"))
+func index(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("./static/index.html"))
 
 	// read db
 	db, err := sql.Open("sqlite", "./cloak.db")
@@ -104,7 +104,7 @@ func main() {
 
 	// static handler
 	mux.Handle("/", http.FileServer(http.Dir("./static")))
-	mux.HandleFunc("/payloads", payloadTable)
+	mux.HandleFunc("/cloak", index)
 
 	// api handlers
 	mux.Handle("/api/version", http.HandlerFunc(api.Version))   // get cloak version
@@ -112,6 +112,6 @@ func main() {
 	mux.Handle("/api/generate", http.HandlerFunc(api.Generate)) // endpoint for actual payload generation
 	mux.Handle("/api/download", http.HandlerFunc(api.Download)) // download previously generated payloads
 
-	log.Printf("Starting Cloak Server on http://%s:%d\n", *lhost, *lport)
+	log.Printf("Starting Cloak Server on http://%s:%d/cloak\n", *lhost, *lport)
 	http.ListenAndServe(fmt.Sprintf("%s:%d", *lhost, *lport), mux)
 }

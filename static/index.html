@@ -6,267 +6,341 @@
         <link rel="stylesheet" href="style/index.css">
     </head>
 
-    <body>
-        
+    <body onload="setSessionStorage()">
+
         <div class="form-container">
 
             <a href="https://github.com/HackLike-co/Cloak" target="_blank" rel="noopener noreferrer"><img src="images/cloak_logo.png" alt=""></a>
-            <form action="/api/f2j" method="post" enctype="multipart/form-data">
-
-                <fieldset class="payload-field">
-                    <legend> <img src="images/payload.png" class="payload-icon" height="28px"> Payload</legend>
-
-                    <div class="payload-info">
-
-                        <div class="file-upload">
-    
-                            <label for="payload-label" class="dont-be-a-button">Payload:</label>
-                            <label for="payload-upload" class="file-upload" id="payload-label">Upload Shellcode</label>
-                            <input type="file" id="payload-upload" name="payload-upload">
-                            <span hidden="true" id="uploaded-payload-label">File: </span>
-                            <span id="payload-name">No Payload Uploaded...</span>
-        
-                        </div>
-
-                        <div class="payload-encoding">
-
-                            <label for="encoding-dropdown">Payload Encoding/Encryption:</label>
-                            <select name="payload-encoding" id="encoding-dropdown">
-
-                                <option value="invalid">Select an Option</option>
-                                <option value="none">none</option>
-                                <!-- <option value="xor">xor</option> -->
-                                <option value="rc4">rc4</option>
-                                <option value="aes">aes</option>
             
-                            </select>
-
-                        </div>
-    
-                    </div>
-
-                    <br>
-
-                    <fieldset class="exec-field">
-                        <legend> <img src="images/exec.png" class="payload-icon" height="28px"> Execution Options</legend>
-
-                        <div class="exec-method">
-                            
-                            <label for="method-dropdown" onchange="showInject()">Payload Exection Method:</label>
-                            <select name="exec-method" id="method-dropdown">
-
-                                <option value="invalid">Select an Exection Method</option>
-                                <option value="inject">Inject</option>
-                                <option value="fibers">Fibers</option>
-                                <option value="threadpool">CreateThreadPoolWait</option>
+            <div class="tabs">
+                <button id="show-gen-button" onclick="showGen()">Generate</button>
+                <button id="show-history-button" onclick="refresh()">History</button>
+            </div>
             
-                            </select>
+            <div id="generate-div">
 
-                        </div>
+                <form action="/api/f2j" method="post" enctype="multipart/form-data">
 
-                        <div class="inject-method" id="inject-method-div">
-
-                            <label for="inject-dropdown">Select an Injection Method:</label>
-                            <select name="inject-method" id="inject-dropdown">
-
-                                <option value="invalid">Select an Injection Method</option>
-                                <option value="local-thread">Local Thread</option>
-                                <!-- <option value="remote-thread">Remote Thread</option> -->
-                                <option value="local-hijack">Local Thread Hijack (CreateThread)</option>
-                                <option value="local-hijack-enum">Local Thread Hijack (EnumThread)</option>
-                                <!-- <option value="remote-hijack">Remote Thread Hijack</option> -->
-                                <option value="apc">APC Inject</option>
-                                <!-- <option value="earlybird">Early Bird APC</option> -->
-                                <!-- <option value="earlycascade">Early Cascade</option> -->
-
-                            </select>
-
-                        </div>
-
-                        <!-- <div class="remote-proc" id="remote-proc-div">
-
-                            <label for="remote-process-input" class="remote-process-input">Target Process:</label>
-                            <br>
-                            <input type="text" name="remote-process" id="remote-process-input" class="remote-process-input">
-
-                        </div> -->
-
-                        <div class="exec-delay">
-                            
-                            <label for="exec-delay-input">Execution Delay (seconds):</label>
-                            <br>
-                            <input type="text" id="exec-delay-input" class="text-input" name="exec-delay">
-                        
-                        </div>
-
-                    </fieldset>
-
-                    <br>
-
-                    <fieldset class="guardrails-field">
-                        <legend> <img src="images/guardrail.png" class="guardrails-icon" height="28px"> Guardrails</legend>
-
-                        <div class="guard-checks">
-
-                            <input type="checkbox" id="check-hostname" name="check-hostname" value="true">
-                            <label for="check-hostname">Check Hostname</label>
+                    <fieldset class="payload-field">
+                        <legend> <img src="images/payload.png" class="payload-icon" height="28px"> Payload</legend>
     
-                            <!-- <input type="checkbox" name="check-domain" id="check-domain" value="true">
-                            <label for="check-domain">Check Domain Name</label> -->
-
-                            <input type="checkbox" name="check-domain-joined" id="check-domain-joined" value="true">
-                            <label for="check-domain-joined">Check Domain Joined</label>
-
-                            <!-- <br> -->
-                            <!-- <br> -->
-
-                            <!-- <input type="checkbox" name="check-subnet" id="check-subnet" value="true">
-                            <label for="check-subnet">Check Subnet</label> -->
-
-                        </div>
-
-                        <br>
-
-                        <div class="guard-inputs">
-
-                            <label for="hostname-input" class="hostname-input">Hostname:</label>
-                            <input type="text" name="hostname-to-check" id="hostname-input" class="hostname-input">
-
-                            <!-- <label for="domainname-input" class="domainname-input">Domain:</label>
-                            <input type="text" name="domain-name-to-check" id="domainname-input" class="domainname-input"> -->
-
-                            <!-- <label for="subnet-input" class="subnet-input">Subnet:</label>
-                            <input type="text" name="subnet-to-check" id="subnet-input" class="subnet-input"> -->
-
-                        </div>
-                        
-                    </fieldset>
-
-                </fieldset>
-
-                <br>
-
-                <fieldset class="evasion-field">
-                    <legend> <img src="images/evade.png" class="output-icon" height="28px"> Evasion</legend>
-
-                    <div class="evasion-checks">
-
-                        <input type="checkbox" id="hash-box" name="api-hash" value="true">
-                        <label for="hash-box">API Hashing</label>
-
-                        <input type="checkbox" id="vm-box" name="check-vm" value="true">
-                        <label for="check-vm">Anti-Sandbox</label>
-
-                        <input type="checkbox" id="adebug-box" name="check-debug" value="true">
-                        <label for="check-debug">Anti-Debug</label>
-
-                    </div>
-
-                </fieldset>
-
-                <br>
-
-                <fieldset class="output-field">
-                    <legend> <img src="images/output.png" class="output-icon" height="28px"> Output Options</legend>
-
-                    <div class="output-select">
+                        <div class="payload-info">
+    
+                            <div class="file-upload">
         
-                        <label for="output-dropdown">Output Format:</label>
-                        <select name="output-format" id="output-dropdown">
+                                <label for="payload-label" class="dont-be-a-button">Payload:</label>
+                                <label for="payload-upload" class="file-upload" id="payload-label">Upload Shellcode</label>
+                                <input type="file" id="payload-upload" name="payload-upload">
+                                <span hidden="true" id="uploaded-payload-label">File: </span>
+                                <span id="payload-name">No Payload Uploaded...</span>
+            
+                            </div>
     
-                            <option value="invalid">Select an Output Format</option>
-                            <option value="exe">EXE</option>
-                            <option value="dll">DLL</option>
-        
-                        </select>
+                            <div class="payload-encoding">
     
-                    </div>
-
-                    <div class="dll-name">
-
-                        <label for="dll-name">Exported Function:</label>
-                        <input type="text" name="dll-name" id="dll-name">
-
-                    </div>
-
-                    <div class="output-name">
-        
-                        <label for="out-name">Output Name:</label>
-                        <input type="text" name="out-name" id="out-name">
+                                <label for="encoding-dropdown">Payload Encoding/Encryption:</label>
+                                <select name="payload-encoding" id="encoding-dropdown">
     
-                    </div>
-
-                    <br>
-
-                    <div class="metadata-check">
-
-                        <input type="checkbox" id="md-box" name="metadata" value="true">
-                        <label for="md-box">Edit Metadata</label>
-
-                    </div> 
-
-                    <fieldset class="metadata-field" id="metadata-field">
-                        <legend> <img src="images/metadata.png" class="output-icon" height="28px"> Metadata</legend>
-
-                        <div class="metadata-div">
-
-                            <label for="icon-dropdown">Icon:</label>
-                            <select name="icon" id="icon-dropdown">
-
-                                <option value="invalid">Select an Option</option>
-                                <option value="none">none</option>
-                                <option value="slack">Slack</option>
-                                <option value="chrome">Google Chrome</option>
-                                <option value="edge">Microsoft Edge</option>
-                                <option value="firefox">Firefox</option>
-                                <option value="outlook">Microsoft Outlook</option>
-
-                            </select>
-
-                            <label for="company-name" class="metadata-input">Company:</label>
-                            <input type="text" name="company-name" id="company-name" class="metadata-input">
-
-                            <label for="file-version" class="metadata-input">File Version:</label>
-                            <input type="text" name="file-version" id="file-version" class="metadata-input">
-
-                            <label for="file-desc" class="metadata-input">File Description:</label>
-                            <input type="text" name="file-desc" id="file-desc" class="metadata-input">
-
-                            <label for="product-name" class="metadata-input">Product Name:</label>
-                            <input type="text" name="product-name" id="product-name" class="metadata-input">
-
-                            <label for="product-version" class="metadata-input">Product Version:</label>
-                            <input type="text" name="product-version" id="product-version" class="metadata-input">
-
-                            <label for="og-filename" class="metadata-input">Original Filename:</label>
-                            <input type="text" name="og-filename" id="og-filename" class="metadata-input">
-
-                            <label for="internal-name" class="metadata-input">Internal Name:</label>
-                            <input type="text" name="internal-name" id="internal-name" class="metadata-input">
-
-                            <label for="copyright" class="metadata-input">Legal Copyright:</label>
-                            <input type="text" name="copyright" id="copyright" class="metadata-input">
-
-                        </div>
-
-                    </fieldset>
-
-                    <br>
-
-                    <div class="debug">
-                        <input type="checkbox" id="debug-box" name="debug" value="true">
-                        <label for="debug-box">Debug</label>
-                    </div>
-
-                </fieldset>
+                                    <option value="invalid">Select an Option</option>
+                                    <option value="none">none</option>
+                                    <!-- <option value="xor">xor</option> -->
+                                    <option value="rc4">rc4</option>
+                                    <option value="aes">aes</option>
                 
-                <input type="submit" name="submit-payload" id="submit-payload" class="submit-payload" value="Generate Payload">
+                                </select>
+    
+                            </div>
+        
+                        </div>
+    
+                        <br>
+    
+                        <fieldset class="exec-field">
+                            <legend> <img src="images/exec.png" class="payload-icon" height="28px"> Execution Options</legend>
+    
+                            <div class="exec-method">
+                                
+                                <label for="method-dropdown" onchange="showInject()">Payload Exection Method:</label>
+                                <select name="exec-method" id="method-dropdown">
+    
+                                    <option value="invalid">Select an Exection Method</option>
+                                    <option value="inject">Inject</option>
+                                    <option value="fibers">Fibers</option>
+                                    <option value="threadpool">CreateThreadPoolWait</option>
+                
+                                </select>
+    
+                            </div>
+    
+                            <div class="inject-method" id="inject-method-div">
+    
+                                <label for="inject-dropdown">Select an Injection Method:</label>
+                                <select name="inject-method" id="inject-dropdown">
+    
+                                    <option value="invalid">Select an Injection Method</option>
+                                    <option value="local-thread">Local Thread</option>
+                                    <!-- <option value="remote-thread">Remote Thread</option> -->
+                                    <option value="local-hijack">Local Thread Hijack (CreateThread)</option>
+                                    <option value="local-hijack-enum">Local Thread Hijack (EnumThread)</option>
+                                    <!-- <option value="remote-hijack">Remote Thread Hijack</option> -->
+                                    <option value="apc">APC Inject</option>
+                                    <!-- <option value="earlybird">Early Bird APC</option> -->
+                                    <!-- <option value="earlycascade">Early Cascade</option> -->
+    
+                                </select>
+    
+                            </div>
+    
+                            <!-- <div class="remote-proc" id="remote-proc-div">
+    
+                                <label for="remote-process-input" class="remote-process-input">Target Process:</label>
+                                <br>
+                                <input type="text" name="remote-process" id="remote-process-input" class="remote-process-input">
+    
+                            </div> -->
+    
+                            <div class="exec-delay">
+                                
+                                <label for="exec-delay-input">Execution Delay (seconds):</label>
+                                <br>
+                                <input type="text" id="exec-delay-input" class="text-input" name="exec-delay">
+                            
+                            </div>
+    
+                        </fieldset>
+    
+                        <br>
+    
+                        <fieldset class="guardrails-field">
+                            <legend> <img src="images/guardrail.png" class="guardrails-icon" height="28px"> Guardrails</legend>
+    
+                            <div class="guard-checks">
+    
+                                <input type="checkbox" id="check-hostname" name="check-hostname" value="true">
+                                <label for="check-hostname">Check Hostname</label>
+        
+                                <!-- <input type="checkbox" name="check-domain" id="check-domain" value="true">
+                                <label for="check-domain">Check Domain Name</label> -->
+    
+                                <input type="checkbox" name="check-domain-joined" id="check-domain-joined" value="true">
+                                <label for="check-domain-joined">Check Domain Joined</label>
+    
+                                <!-- <br> -->
+                                <!-- <br> -->
+    
+                                <!-- <input type="checkbox" name="check-subnet" id="check-subnet" value="true">
+                                <label for="check-subnet">Check Subnet</label> -->
+    
+                            </div>
+    
+                            <br>
+    
+                            <div class="guard-inputs">
+    
+                                <label for="hostname-input" class="hostname-input">Hostname:</label>
+                                <input type="text" name="hostname-to-check" id="hostname-input" class="hostname-input">
+    
+                                <!-- <label for="domainname-input" class="domainname-input">Domain:</label>
+                                <input type="text" name="domain-name-to-check" id="domainname-input" class="domainname-input"> -->
+    
+                                <!-- <label for="subnet-input" class="subnet-input">Subnet:</label>
+                                <input type="text" name="subnet-to-check" id="subnet-input" class="subnet-input"> -->
+    
+                            </div>
+                            
+                        </fieldset>
+    
+                    </fieldset>
+    
+                    <br>
+    
+                    <fieldset class="evasion-field">
+                        <legend> <img src="images/evade.png" class="output-icon" height="28px"> Evasion</legend>
+    
+                        <div class="evasion-checks">
+    
+                            <input type="checkbox" id="hash-box" name="api-hash" value="true">
+                            <label for="hash-box">API Hashing</label>
+    
+                            <input type="checkbox" id="vm-box" name="check-vm" value="true">
+                            <label for="check-vm">Anti-Sandbox</label>
+    
+                            <input type="checkbox" id="adebug-box" name="check-debug" value="true">
+                            <label for="check-debug">Anti-Debug</label>
+    
+                        </div>
+    
+                    </fieldset>
+    
+                    <br>
+    
+                    <fieldset class="output-field">
+                        <legend> <img src="images/output.png" class="output-icon" height="28px"> Output Options</legend>
+    
+                        <div class="output-select">
+            
+                            <label for="output-dropdown">Output Format:</label>
+                            <select name="output-format" id="output-dropdown">
+        
+                                <option value="invalid">Select an Output Format</option>
+                                <option value="exe">EXE</option>
+                                <option value="dll">DLL</option>
+            
+                            </select>
+        
+                        </div>
+    
+                        <div class="dll-name">
+    
+                            <label for="dll-name">Exported Function:</label>
+                            <input type="text" name="dll-name" id="dll-name">
+    
+                        </div>
+    
+                        <div class="output-name">
+            
+                            <label for="out-name">Output Name:</label>
+                            <input type="text" name="out-name" id="out-name">
+        
+                        </div>
+    
+                        <br>
+    
+                        <div class="metadata-check">
+    
+                            <input type="checkbox" id="md-box" name="metadata" value="true">
+                            <label for="md-box">Edit Metadata</label>
+    
+                        </div> 
+    
+                        <fieldset class="metadata-field" id="metadata-field">
+                            <legend> <img src="images/metadata.png" class="output-icon" height="28px"> Metadata</legend>
+    
+                            <div class="metadata-div">
+    
+                                <label for="icon-dropdown">Icon:</label>
+                                <select name="icon" id="icon-dropdown">
+    
+                                    <option value="invalid">Select an Option</option>
+                                    <option value="none">none</option>
+                                    <option value="slack">Slack</option>
+                                    <option value="chrome">Google Chrome</option>
+                                    <option value="edge">Microsoft Edge</option>
+                                    <option value="firefox">Firefox</option>
+                                    <option value="outlook">Microsoft Outlook</option>
+    
+                                </select>
+    
+                                <label for="company-name" class="metadata-input">Company:</label>
+                                <input type="text" name="company-name" id="company-name" class="metadata-input">
+    
+                                <label for="file-version" class="metadata-input">File Version:</label>
+                                <input type="text" name="file-version" id="file-version" class="metadata-input">
+    
+                                <label for="file-desc" class="metadata-input">File Description:</label>
+                                <input type="text" name="file-desc" id="file-desc" class="metadata-input">
+    
+                                <label for="product-name" class="metadata-input">Product Name:</label>
+                                <input type="text" name="product-name" id="product-name" class="metadata-input">
+    
+                                <label for="product-version" class="metadata-input">Product Version:</label>
+                                <input type="text" name="product-version" id="product-version" class="metadata-input">
+    
+                                <label for="og-filename" class="metadata-input">Original Filename:</label>
+                                <input type="text" name="og-filename" id="og-filename" class="metadata-input">
+    
+                                <label for="internal-name" class="metadata-input">Internal Name:</label>
+                                <input type="text" name="internal-name" id="internal-name" class="metadata-input">
+    
+                                <label for="copyright" class="metadata-input">Legal Copyright:</label>
+                                <input type="text" name="copyright" id="copyright" class="metadata-input">
+    
+                            </div>
+    
+                        </fieldset>
+    
+                        <br>
+    
+                        <div class="debug">
+                            <input type="checkbox" id="debug-box" name="debug" value="true">
+                            <label for="debug-box">Debug</label>
+                        </div>
+    
+                    </fieldset>
+                    
+                    <input type="submit" name="submit-payload" id="submit-payload" class="submit-payload" value="Generate Payload">
+    
+                </form>    
 
-            </form>
+            </div>
+
+            <div id="history-div" hidden>
+
+                <div class="table-container">
+        
+                    <table>
+                        <tr>
+                            <th>Payload ID</th>
+                            <th>Payload Name</th>
+                            <th>Output Format</th>
+                            <th>Generation Time</th>
+                            <th>Download</th>
+                        </tr>
+                        {{range .Payload}}
+                            <tr>
+                                <td>{{.Id}}</td>
+                                <td>{{.Name}}</td>
+                                <td>{{.Type}}</td>
+                                <td>{{.Time}}</td>
+                                <td><form action="/api/download" method="get"><input type="text" name="id" value="{{.Id}}" class="hidden"><input type="submit" class="submit-download" value="Download"></form></td>
+                            </tr>
+                        {{end}}
+                    </table>
+        
+                </div>
+
+            </div>
 
         </div>
 
         <script>
+            function setSessionStorage() {
+                let data = sessionStorage.getItem("active");
+                
+                if (data === null) {
+                    sessionStorage.setItem("active", "generate");
+                }
+
+                if (data === "history") {
+                    showHis();
+                }
+            }
+
+            function showGen() {
+                let genDiv = document.getElementById("generate-div");
+                let historyDiv = document.getElementById("history-div");
+
+                sessionStorage.setItem("active", "generate");
+
+                genDiv.hidden = false;
+                historyDiv.hidden = true;
+            }
+
+            function refresh() {
+                location.reload();
+                showHis();
+            }
+
+            function showHis() {
+                let genDiv = document.getElementById("generate-div");
+                let historyDiv = document.getElementById("history-div");
+
+                sessionStorage.setItem("active", "history");
+
+                genDiv.hidden = true;
+                historyDiv.hidden = false;
+            }
+
             // fancy upload button
             let uploadPayloadBtn = document.getElementById("payload-upload");
             uploadPayloadBtn.addEventListener("change", updatePayloadText);

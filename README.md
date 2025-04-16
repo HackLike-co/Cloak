@@ -34,7 +34,7 @@ sudo docker run --publish 8080:8080 cloak
 
 ## Features
 - [X] Convienent Web UI
-- [ ] View Generated Payloads*
+- [X] View Generated Payloads*
 
 ### Input Formats
 - [X] Shellcode

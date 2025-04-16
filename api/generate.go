@@ -222,11 +222,12 @@ func generate(g transport.Generate) ([]byte, error) {
 		log.Fatal(err)
 	}
 
-	db.Exec("INSERT INTO Payloads VALUES(NULL, $1, $2, $3)", g.OutputName, g.OutputFormat, time.Now().Unix())
+	t := time.Now().Unix()
+	db.Exec("INSERT INTO Payloads VALUES(NULL, $1, $2, $3)", g.OutputName, g.OutputFormat, t)
 	db.Close()
 
 	// copy payload to ./bin
-	err = copyFile(src, fmt.Sprintf("./bins/%s_%d.%s", g.OutputName, time.Now().Unix(), g.OutputFormat))
+	err = copyFile(src, fmt.Sprintf("./bins/%s_%d.%s", g.OutputName, t, g.OutputFormat))
 	if err != nil {
 		log.Println(err)
 	}
