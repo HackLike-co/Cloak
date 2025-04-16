@@ -103,7 +103,7 @@ sudo docker run --publish 8080:8080 cloak
 - Checking the amount of memory acts funky in if statement
 
 ## References
-This project was inspired by the amazing EvadeX from [PhantomSec](https://phantomsec.tools) and OST from [Outflank](https://www.outflank.nl/products/outflank-security-tooling/). If you and your team has the funds, I highly recommend them. This is just a shitty knock off because it seemed like a fun project.
+This project was inspired by the amazing EvadeX from [PhantomSec](https://phantomsec.tools) and OST from [Outflank](https://www.outflank.nl/products/outflank-security-tooling/). If you and your team has the funds, I highly recommend them.
 
 - [tiny-AES-c](https://github.com/kokke/tiny-AES-c)
 - [VX-API](https://github.com/vxunderground/VX-API)
