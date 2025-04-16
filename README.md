@@ -34,7 +34,7 @@ sudo docker run --publish 8080:8080 cloak
 
 ## Features
 - [X] Convienent Web UI
-- [X] View Generated Payloads*
+- [X] View Generated Payloads
 
 ### Input Formats
 - [X] Shellcode
@@ -64,6 +64,8 @@ sudo docker run --publish 8080:8080 cloak
 - [ ] Callstack Spoofing
 - [ ] Chunking
 - [X] Payload Encryption/Encoding
+    - [X] AES
+    - [X] RC4
 - [ ] AMSI Patching* (HWBP)
 - [ ] ETW Patching* (HWBP)
 - [ ] DLL Unhooking*
