@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="style/index.css">
     </head>
 
-    <body onload="setSessionStorage()">
+    <body onload="setSessionStorage()" id="bd">
 
         <div class="form-container">
 
@@ -456,8 +456,14 @@
             metaCheck.addEventListener("change", function(event) {
                 if (event.target.checked === true) {
                     metaField.style.display = "block"
+
+                    let bd = document.getElementById("bd");
+                    bd.style.height = "115vh";
                 } else {
                     metaField.style.display = "none"
+
+                    let bd = document.getElementById("bd");
+                    bd.style.height = "100vh";
                 }
             });
 
