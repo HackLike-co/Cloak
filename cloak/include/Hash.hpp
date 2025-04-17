@@ -5,6 +5,8 @@
 
 #include "Config.hpp"
 
+#if defined HASH_API
+
 #include <windows.h>
 
 constexpr int RandomCompileTimeSeed(void)
@@ -43,5 +45,7 @@ constexpr DWORD HashStringCrc32(const char* String) {
 #define CTIME_HASHA( API ) constexpr auto API##_CRC32A = HashStringCrc32( ( const char* ) #API );
 
 FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash);
+
+#endif // !HASH_API
 
 #endif // !HASH_H

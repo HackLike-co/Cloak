@@ -3,7 +3,9 @@
 #ifdef LOCAL_THREAD
 
 #ifdef HASH_API
+
 #include "Hash.hpp"
+#include "Defs.hpp"
 
 BOOL LocalThreadInject(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
     HMODULE hKernel32 = NULL;

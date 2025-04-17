@@ -4,6 +4,7 @@
 
 #ifdef HASH_API
 #include "Hash.hpp"
+#include "Defs.hpp"
 
 VOID WaitForSingleObjectExAlertable() {
     HMODULE hKernel32 = NULL;

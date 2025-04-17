@@ -4,6 +4,7 @@
 
 #ifdef HASH_API
 #include "Hash.hpp"
+#include "Defs.hpp"
 
 BOOL ThreadPoolWait(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
     

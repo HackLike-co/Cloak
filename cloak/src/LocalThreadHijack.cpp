@@ -2,6 +2,7 @@
 
 #if defined(HASH_API) && ( defined(LOCAL_THREAD_HIJACK) || defined(LOCAL_THREAD_HIJACK_ENUM) )
 #include "Hash.hpp"
+#include "Defs.hpp"
 #endif // !HASH_API
 
 #ifdef LOCAL_THREAD_HIJACK

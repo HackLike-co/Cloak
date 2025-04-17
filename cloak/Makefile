@@ -2,8 +2,8 @@ MAKEFLAGS += -s
 
 NAME = cloak
 
-NASM = /usr/bin/nasm
-CCx64 = /usr/bin/x86_64-w64-mingw32-g++
+NASM 	= /usr/bin/nasm
+CCx64 	= /usr/bin/x86_64-w64-mingw32-g++
 
 CFLAGS	  =  -Os -fno-asynchronous-unwind-tables -masm=intel
 CFLAGS	  += -fno-ident -fpack-struct=8 -falign-functions=1
@@ -30,14 +30,14 @@ x64-exe:
 
 	$(CCx64) $(SOURCE) $(INCLUDE) $(CFLAGS) -m64 -o bin/$(NAME).exe
 
-	printf "\033[0;36m[+]\033[0m Finished EXE Build\n"
+	printf "\033[0;32m[+]\033[0m Finished EXE Build\n"
 
 x64-dll:
 	printf "\033[0;36m[*]\033[0m Starting DLL Build\n"
 
 	$(CCx64) $(SOURCE) $(INCLUDE) $(CFLAGS) -m64 -shared -o bin/$(NAME).dll
 
-	printf "\033[0;36m[+]\033[0m Finished DLL Build\n"
+	printf "\033[0;32m[+]\033[0m Finished DLL Build\n"
 
 clean:
 	rm -rf bin/*.exe
