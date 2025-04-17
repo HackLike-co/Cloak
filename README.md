@@ -99,6 +99,9 @@ sudo docker run --publish 8080:8080 cloak
 
 > *v1.0 Goals
 
+## Community
+[Discord](https://discord.gg/qNzsmPC3Kr)
+
 ## Known Issues
 - SetThreadpoolWait doesn't play nicely for API Hashing, need to figure out why
 - Checking the amount of memory acts funky in if statement
