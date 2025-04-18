@@ -156,10 +156,6 @@ int CloakMain(PVOID Reserved) {
     }
     #endif // !THREADPOOLWAIT
 
-    #ifdef BYPASS_AMSI
-    CleapUpHardwareBreakpointHooking();
-    #endif // !BYPASS_AMSI
-
     return 0;
 
 }

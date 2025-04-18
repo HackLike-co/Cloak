@@ -5,7 +5,10 @@
 
 #define DEBUG
 
-#define LOCAL_THREAD
+#define HASH_API
+#define RAND 0x05
+
+#define FIBERS
 
 #define WAIT_TIME INFINITE
 

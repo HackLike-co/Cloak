@@ -24,11 +24,6 @@ BOOL CheckHostname(IN LPSTR pwGuardHost);
 BOOL CheckDomainJoined();
 #endif // !CHECK_DOMAIN_JOINED
 
-#ifdef ANTI_DEBUG
-// return TRUE if being debugged
-BOOL IsDebuggerPresent();
-#endif // !ANTI_DEBUG
-
 #ifdef ANTI_VM
 // return TRUE if in VM
 BOOL IsVm();
