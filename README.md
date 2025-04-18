@@ -6,21 +6,7 @@
 Generate Secure, Polymorphic, Evasive Payloads
 
 ## Quick Start
-Cloak is designed to be run on Debian based distros
-```
-sudo apt install -y make mingw-w64
-```
-> mingw is a requirement for building cloak. If you don't have Go installed (and don't want to install it) you can download a compiled release
-
-```
-git clone https://github.com/HackLike-co/Cloak.git
-cd Cloak
-go build .
-./cloak
-```
-> Note: The binary must be run within the "Cloak" directory to properly function
-
-Or you can run it as a docker container
+The easiest way to run Cloak is with Docker. If you wish to install it locally, check the [wiki](https://github.com/HackLike-co/Cloak/wiki/Installation) for installation instructions
 ```
 git clone https://github.com/HackLike-co/Cloak.git
 cd Cloak

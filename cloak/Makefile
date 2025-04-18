@@ -3,13 +3,14 @@ MAKEFLAGS += -s
 NAME = cloak
 
 NASM 	= /usr/bin/nasm
-CCx64 	= /usr/bin/x86_64-w64-mingw32-g++
+CCx64 	= /usr/local/bin/zig c++
 
-CFLAGS	  =  -Os -fno-asynchronous-unwind-tables -masm=intel
+CFLAGS	  = -target x86_64-windows
+CFLAGS	  +=  -Os -fno-asynchronous-unwind-tables -masm=intel
 CFLAGS	  += -fno-ident -fpack-struct=8 -falign-functions=1
 CFLAGS    += -s -ffunction-sections -falign-jumps=1 -w
 CFLAGS	  += -falign-labels=1 -fPIC -fpermissive
-CFLAGS	  += -Wl,-s,--no-seh,--enable-stdcall-fixup
+CFLAGS	  += -Wl,-s
 
 SOURCE = $(wildcard src/*)
 INCLUDE = -I include
