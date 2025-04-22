@@ -29,7 +29,7 @@ metadata:
 x64-exe:
 	printf "\033[0;36m[*]\033[0m Starting EXE Build\n"
 
-	$(CCx64) $(SOURCE) $(INCLUDE) $(CFLAGS) -m64 -o bin/$(NAME).exe
+	$(CCx64) $(SOURCE) $(INCLUDE) $(CFLAGS) -lcrypt32 -m64 -o bin/$(NAME).exe
 
 	printf "\033[0;32m[+]\033[0m Finished EXE Build\n"
 

