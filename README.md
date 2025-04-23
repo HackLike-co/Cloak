@@ -19,6 +19,7 @@ cd Cloak
 sudo docker build . --tag cloak
 sudo docker run --publish 8080:8080 cloak
 ```
+You can then navigate to http://127.0.0.1:8080/cloak to start generating payloads!
 
 <p align="center">
     <img src="https://github.com/HackLike-co/Cloak/blob/main/images/cloak_ui.png?raw=true">
