@@ -1,6 +1,7 @@
 #include "Cloak.hpp"
 
 #ifdef BASE64
+
 #include <wincrypt.h>
 #pragma comment (lib, "Crypt32.lib")
 

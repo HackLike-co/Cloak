@@ -5,12 +5,12 @@ NAME = cloak
 NASM 	= /usr/bin/nasm
 CCx64 	= /usr/local/bin/zig c++
 
-CFLAGS	  = -target x86_64-windows
-CFLAGS	  +=  -Os -fno-asynchronous-unwind-tables -masm=intel
-CFLAGS	  += -fno-ident -fpack-struct=8 -falign-functions=1
-CFLAGS    += -s -ffunction-sections -falign-jumps=1 -w
-CFLAGS	  += -falign-labels=1 -fPIC -fpermissive
-CFLAGS	  += -Wl,-s
+ZFLAGS	  = -target x86_64-windows
+ZFLAGS	  +=  -Os -fno-asynchronous-unwind-tables -masm=intel
+ZFLAGS	  += -fno-ident -fpack-struct=8 -falign-functions=1
+ZFLAGS    += -s -ffunction-sections -falign-jumps=1 -w
+ZFLAGS	  += -falign-labels=1 -fPIC -fpermissive
+ZFLAGS	  += -Wl,-s
 
 SOURCE = $(wildcard src/*)
 INCLUDE = -I include
@@ -29,7 +29,7 @@ metadata:
 x64-exe:
 	printf "\033[0;36m[*]\033[0m Starting EXE Build\n"
 
-	$(CCx64) $(SOURCE) $(INCLUDE) $(CFLAGS) -lcrypt32 -m64 -o bin/$(NAME).exe
+	$(CCx64) $(SOURCE) $(INCLUDE) $(ZFLAGS) -lcrypt32 -m64 -o bin/$(NAME).exe
 
 	printf "\033[0;32m[+]\033[0m Finished EXE Build\n"
 
