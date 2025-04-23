@@ -46,6 +46,16 @@ constexpr DWORD HashStringCrc32(const char* String) {
 
 FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash);
 
+// load library replacement
+#include <winternl.h>
+
+typedef NTSTATUS ( WINAPI* fnLdrLoadDll ) (
+	PWSTR pDllPath, PULONG pDllCharacteristics, PUNICODE_STRING pDllName, PVOID* ppDllHandle
+);
+
+VOID 	RtlInitUnicodeString(OUT PUNICODE_STRING DestinationString, IN PCWSTR SourceString);
+LPVOID 	LdrLoadDll(IN LPWSTR ModuleName);
+
 #endif // !HASH_API
 
 #endif // !HASH_H

@@ -8,8 +8,6 @@ Generate Secure, Polymorphic, Evasive Payloads
 # v0.6 Goals
 - [X] Base64 Encoding
 - [X] Base32 Encoding
-- [ ] Domain Name Guardrail
-- [ ] Subnet Guardrail
 
 ## Quick Start
 The easiest way to run Cloak is with Docker. If you wish to install it locally, check the [wiki](https://github.com/HackLike-co/Cloak/wiki/Installation) for installation instructions

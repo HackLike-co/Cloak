@@ -1,6 +1,7 @@
 #include "Config.hpp"
 
 #ifdef HASH_API
+#include <stdio.h>
 #include "Hash.hpp"
 
 FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
@@ -32,6 +33,54 @@ FARPROC GetProcAddressH(HMODULE hModule, DWORD dwApiNameHash) {
 	}
 
 	return NULL;
+}
+
+VOID RtlInitUnicodeString(OUT PUNICODE_STRING DestinationString, IN PCWSTR SourceString) {
+
+    if ( SourceString ) {
+        LPCWSTR s2;
+
+        for ( s2 = SourceString; *s2; ++s2 );
+
+        SIZE_T DestSize = ( ( int ) ( s2 - SourceString ) ) * sizeof( WCHAR );
+        DestinationString->Length = ( USHORT ) DestSize;
+        DestinationString->MaximumLength = ( USHORT ) DestSize + sizeof( WCHAR );
+    }
+    else {
+        DestinationString->Length = 0x00;
+        DestinationString->MaximumLength = 0x00;
+    }
+
+    DestinationString->Buffer = ( PWCHAR ) SourceString;
+}
+
+CTIME_HASHA(LdrLoadDll)
+
+LPVOID LdrLoadDll(IN LPWSTR ModuleName) {
+    NTSTATUS            STATUS              = 0x00;
+    UNICODE_STRING      usDllName           = { 0 };
+    LPVOID              pModule             = NULL;
+    fnLdrLoadDll        pLdrLoadDll         = NULL;
+
+    if ( ! ( pLdrLoadDll = ( fnLdrLoadDll ) GetProcAddressH( GetModuleHandleA( "NTDLL" ) , LdrLoadDll_CRC32A ) ) ) {
+        #ifdef DEBUG
+		printf( "[-] GetProcAddressH Failed With Error: %d \n", GetLastError() );
+		#endif // !DEBUG
+
+        return NULL;
+    }
+
+    RtlInitUnicodeString( &usDllName, ModuleName );
+
+    if ( ( STATUS = pLdrLoadDll( NULL, NULL, &usDllName, &pModule ) ) != 0x00 ) {
+		#ifdef DEBUG
+        printf( "[-] LdrLoadDll Failed With Error: 0x%0.8X \n", STATUS );
+		#endif // !DEBUG
+
+        return NULL;
+    }
+
+    return pModule;
 }
 
 #endif // !HASH_API

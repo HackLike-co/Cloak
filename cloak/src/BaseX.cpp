@@ -13,7 +13,7 @@ PBYTE DecodeBase64(IN LPCSTR Payload) {
     HMODULE hCrypt32    = NULL;
     HMODULE hKernel32   = NULL;
 
-    if ( ( hKernel32 = LoadLibraryA( "KERNEL32.dll" ) ) == NULL ) {
+    if ( ( hKernel32 = ( HMODULE ) LdrLoadDll( L"KERNEL32.dll" ) ) == NULL ) {
         #ifdef DEBUG
         printf( "[-] LoadLibraryA Failed with Error -> %d\n", GetLastError() );
         #endif // !DEBUG
@@ -21,7 +21,7 @@ PBYTE DecodeBase64(IN LPCSTR Payload) {
         return NULL;
     }
 
-    if ( ( hCrypt32 = LoadLibraryA( "CRYPT32.dll" ) ) == NULL ) {
+    if ( ( hCrypt32 = ( HMODULE ) LdrLoadDll( L"CRYPT32.dll" ) ) == NULL ) {
         #ifdef DEBUG
         printf( "[-] LoadLibraryA Failed with Error -> %d\n", GetLastError() );
         #endif // !DEBUG

