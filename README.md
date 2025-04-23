@@ -102,4 +102,4 @@ This project was inspired by the amazing EvadeX from [PhantomSec](https://phanto
 - [VX-API](https://github.com/vxunderground/VX-API)
 - [Rad98 Hooking Engine](https://github.com/vxunderground/VX-API#rad98-hooking-engine)
 
-If you want to learn more, I recommend [ired.team](https://ired.team), [Maldev Academy](https://maldevacademy.com) or [White Knight Labs](https://whiteknightlabs.com)
+If you want to learn more, I recommend [ired.team](https://ired.team), [Maldev Academy](https://maldevacademy.com), or [White Knight Labs](https://whiteknightlabs.com)
