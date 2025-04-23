@@ -56,6 +56,11 @@ typedef NTSTATUS(NTAPI* fnSystemFunction033)(
 PBYTE DecodeBase64(IN LPCSTR Payload);
 #endif // !BASE64
 
+#ifdef BASE32
+int base32DecodeChar(char c);
+size_t base32Decode(const char* encoded, unsigned char** decoded);
+#endif
+
 #ifdef LOCAL_THREAD
 BOOL LocalThreadInject(IN PBYTE pbPayload[], IN SIZE_T sPayloadSize);
 #endif // !LOCAL_THREAD

@@ -340,6 +340,20 @@ CTIME_HASHA(CreateFiber)
 CTIME_HASHA(SwitchToFiber)
 #endif // !FIBERS
 
+#ifdef BASE64
+typedef BOOL ( WINAPI * fnCryptStringToBinaryA ) (
+    LPCSTR pszString,
+    DWORD  cchString,
+    DWORD  dwFlags,
+    BYTE   *pbBinary,
+    DWORD  *pcbBinary,
+    DWORD  *pdwSkip,
+    DWORD  *pdwFlags
+);
+
+CTIME_HASHA(CryptStringToBinaryA)
+#endif // !BASE64
+
 #endif // !HASH_API
 
 #endif // !DEFS_H

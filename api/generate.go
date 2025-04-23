@@ -3,6 +3,7 @@ package api
 import (
 	"cloak-ui/api/transport"
 	"database/sql"
+	"encoding/base32"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -77,6 +78,13 @@ func generate(g transport.Generate) ([]byte, error) {
 
 		// write updated payload
 		pFile.WriteString(output)
+	case "base32":
+		ePayload := base32.StdEncoding.EncodeToString(g.Payload)
+
+		output := fmt.Sprintf("#pragma once\n\nunsigned char Payload[] = \"%s\";", ePayload)
+
+		// write updated payload
+		pFile.WriteString(output)
 	case "none":
 		output := fmt.Sprintf("#pragma once\n\n%s", gecko.C_FormatArray(g.Payload, "Payload"))
 
@@ -106,6 +114,8 @@ func generate(g transport.Generate) ([]byte, error) {
 		configOutput += "#define RC4\n\n"
 	case "base64":
 		configOutput += "#define BASE64\n\n"
+	case "base32":
+		configOutput += "#define BASE32\n\n"
 	}
 
 	if g.ExecDelay > 0 {
@@ -205,10 +215,6 @@ func generate(g transport.Generate) ([]byte, error) {
 	} else {
 		cmd = "make exe -C ./cloak/"
 	}
-
-	if g.EncryptionAlgo == "base64" {
-		cmd += " LINK='-l crypt32'"
-	}
 	cmdNoReturn(cmd)
 
 	// read generated file
@@ -252,7 +258,10 @@ func generate(g transport.Generate) ([]byte, error) {
 
 func cmdNoReturn(c string) {
 	cmd := exec.Command("bash", "-c", c)
-	cmd.Run()
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func replaceFuncName(fPath string, og string, new string) error {

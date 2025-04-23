@@ -6,8 +6,8 @@
 Generate Secure, Polymorphic, Evasive Payloads
 
 # v0.6 Goals
-- [ ] Base64 Encoding
-- [ ] Base32 Encoding
+- [X] Base64 Encoding
+- [X] Base32 Encoding
 - [ ] Domain Name Guardrail
 - [ ] Subnet Guardrail
 
@@ -59,6 +59,8 @@ sudo docker run --publish 8080:8080 cloak
 - [X] Payload Encryption/Encoding
     - [X] AES
     - [X] RC4
+    - [X] Base64
+    - [X] Base32
 - [ ] AMSI Patching* (HWBP)
 - [ ] ETW Patching* (HWBP)
 - [ ] DLL Unhooking*
