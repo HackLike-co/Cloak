@@ -103,3 +103,12 @@ This project was inspired by the amazing EvadeX from [PhantomSec](https://phanto
 - [Rad98 Hooking Engine](https://github.com/vxunderground/VX-API#rad98-hooking-engine)
 
 If you want to learn more, I recommend [ired.team](https://ired.team), [Maldev Academy](https://maldevacademy.com), or [White Knight Labs](https://whiteknightlabs.com)
+
+## Liability
+This is an open source project, maintained by HackLike.co and is meant to be used only on authorized systems for security and/or research purposes. The authors, contributors, and HackLike.co LLC assume no liability or responsibility for any misuse of this tool. Users are responsible for ensuring compliance with all local, state, federal, and international laws and regulations.
+
+By using this tool, you, the user, are agreeing to the following:
+1. This tool will only be used for legal testing and/or research purposes
+2. You, the user, have proper authorization to use the tool for testing and/or research
+3. You, the user, will not use this tool for unauthorized access and/or exploitation
+4. You, the user, assume all responsibility and liability for any misuse of this tool
