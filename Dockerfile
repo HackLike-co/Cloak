@@ -6,7 +6,7 @@ COPY . .
 
 RUN apt update && \
     apt install -y mingw-w64 make wget xz-utils && \
-    wget https://ziglang.org/download/0.14.0/zig-linux-x86_64-0.14.0.tar.xz && \
+    wget http://pkg.machengine.org/zig/zig-linux-x86_64-0.14.0.tar.xz && \
     tar -xf zig-linux-x86_64-0.14.0.tar.xz && \
     mv zig-linux-x86_64-0.14.0 /usr/local/zig && \
     rm zig-linux-x86_64-0.14.0.tar.xz;
